@@ -1,94 +1,93 @@
-# SubDrip — Marketing Website
+<div align="center">
 
-Marketing site for the SubDrip app (formerly "Subscription Spend Analyzer" in the design files), built from the design
-handoff in [`../design/design_handoff_website/`](../design/design_handoff_website/)
-(visual source of truth: `design/Subscription Spend Analyzer - standalone.html`).
+<img src="assets/logo.svg" width="90" alt="SubDrip logo" />
 
-**Stack:** Next.js (App Router) + TypeScript + Tailwind CSS v4 base. All design
-values (oklch colors, radii, shadows, type scale, copy) are ported literally from
-the design files. Every route is statically prerendered (static-export friendly,
-no CMS, no backend).
+# SubDrip
 
-## Run it
+### Every subscription is a drip. We add them up.
+
+The marketing website for **SubDrip** — the privacy-first app that finds your
+recurring subscriptions and shows you what they really cost.
+
+![Website](https://img.shields.io/badge/website-Next.js-0f766e)
+![Platforms](https://img.shields.io/badge/app-Android%20%C2%B7%20iOS-14695f)
+![Status](https://img.shields.io/badge/status-private%20beta-7fd8c9)
+
+</div>
+
+---
+
+## 💧 What is SubDrip?
+
+Streaming, music, cloud storage, AI tools — each one feels small until they add
+up to one large number at the end of the year. SubDrip brings every recurring
+charge into one place and keeps you ahead of it:
+
+- 🔎 **Finds subscriptions you forgot about** — a read-only Gmail scan spots
+  receipts and renewal notices and proposes the services behind them. Nothing
+  is imported until *you* review and confirm it.
+- ⚡ **Adds known services in three taps** — a regional plan catalog with
+  suggested plans, prices, and an AI-estimated renewal date. Everything stays
+  editable.
+- 📊 **Shows where the money goes** — monthly total, annual projection,
+  category breakdown, trends, and your highest-cost services ranked.
+- ⏰ **Never lets a renewal surprise you** — a renewal timeline with reminders
+  by push, email, or SMS, and an opt-in **full-screen alarm** that rings
+  through silent for the charges you can't afford to miss.
+- 💡 **Turns data into savings** — ranked ideas with the evidence behind each
+  one: duplicate plans, price rises, trials about to convert, barely-used
+  services.
+- 🔐 **Privacy-first, always** — read-only source access, no bank logins ever,
+  and delete-everything built in.
+
+## 🖥 The website
+
+This site tells that story across nine pages — including a **live demo** where
+you can click through the actual app screens in your browser, with sample data
+and nothing connected.
+
+| | |
+|---|---|
+| **Home** | The problem, how it works, and the payoff — with a ₹ INR / $ USD price toggle |
+| **Live demo** | The real app screens, explorable: dashboard, renewals, analytics, catalog, savings |
+| **Features** | Each feature next to the phone screen it lives on |
+| **Privacy & Data deletion** | Plain-language data practices and both deletion routes |
+| **FAQ & Support** | Answers by category, plus a contact form |
+| **Get early access** | Join the waitlist — one email when it ships, nothing else |
+
+<div align="center">
+
+<img src="screenshots/home.png" width="800" alt="SubDrip home page — hero with live phone mockup" />
+
+<img src="screenshots/demo.png" width="800" alt="Live demo page — explorable app screens with jump-to chips" />
+
+<img src="screenshots/features.png" width="800" alt="Features page — feature stories beside real app screens" />
+
+</div>
+
+## ⚡ Run it locally
 
 ```bash
 npm install
-npm run dev      # http://localhost:3000
-npm run build    # production build — all 9 routes prerender statically
-npm run lint
+cp .env.example .env.local   # DATABASE_URL enables the waitlist (optional for browsing)
+npm run dev                  # http://localhost:3000
 ```
 
-## Routes
+<details>
+<summary><b>Deploying & configuration</b></summary>
 
-| Route | Content |
-|---|---|
-| `/` | Hero (phone carousel + floating pills), Problem, How it works, Payoff (currency toggle), What's inside, Privacy, FAQ preview, Private-beta band |
-| `/how-it-works` | 3 numbered steps with side panels |
-| `/demo` | Interactive phone mockup with jump-to chips + working tab bar |
-| `/features` | Alternating text/phone rows (7 features) |
-| `/privacy` | Pillars + accordion sections |
-| `/data-deletion` | Two deletion routes, deleted/retained lists |
-| `/faq` | Category filter chips + accordion |
-| `/support` | Validated contact form + quick links |
-| `/download` | Early-access CTA, store placeholders, screenshot row |
+- **Vercel:** add the `DATABASE_URL` environment variable (marked *Sensitive*).
+  Waitlist signups are stored in the project's Postgres — no extra backend
+  needed. If this folder lives inside the monorepo, also set the project's
+  Root Directory to `website/`.
+- Every page is statically prerendered; only the waitlist API route runs on
+  demand, so deploy on a Node host (Vercel / `next start`).
+- Brand name, tagline, and colors live in [`src/lib/brand.ts`](src/lib/brand.ts).
 
-## Component structure
+</details>
 
-```
-src/
-├── app/                        # One folder per route; page.tsx holds metadata,
-│   │                           # *Content.tsx is the client component when the
-│   │                           # page is interactive
-│   ├── layout.tsx              # Fonts (next/font: Sora + Work Sans), Header,
-│   │                           # Footer, CurrencyProvider
-│   └── globals.css             # Keyframes + the design's complete responsive
-│                               # spec (data-r attribute media queries, ported
-│                               # verbatim) + hover/focus helper classes
-├── components/
-│   ├── Header.tsx              # Sticky blur header, desktop nav, burger drawer
-│   ├── Footer.tsx
-│   ├── Logo.tsx                # SubDrip drip mark, pure SVG (32 / 30 / 64 px)
-│   ├── WaitlistForm.tsx        # light/dark tones, left/center align, validation
-│   ├── CatalogDemo.tsx         # 4-step catalog quick-add walkthrough
-│   ├── home/                   # Home page sections
-│   └── phone/
-│       ├── HeroPhone.tsx       # 300px marketing phone, 9 screen variants,
-│       │                       # currency-aware (used on /, /features, /download)
-│       └── DemoPhone.tsx       # 412px app mockup for /demo — 8 static screens
-│                               # with a working bottom tab bar
-└── lib/
-    ├── brand.ts                # ★ Brand constants: name, tagline, emails,
-    │                           #   copy, color tokens, nav/footer links
-    ├── siteData.ts             # All page copy, verbatim from the design
-    ├── appData.ts              # /demo sample data (ported from AppDemo.dc.html,
-    │                           #   frozen "today" = 2026-07-11, INR)
-    └── currency.tsx            # Shared INR/USD context (toggle lives in the
-                                #   home Payoff section; changes prices site-wide)
-```
+---
 
-## Where the form endpoints plug in
-
-- **Waitlist** — [`src/components/WaitlistForm.tsx`](src/components/WaitlistForm.tsx)
-  posts to the built-in [`/api/waitlist`](src/app/api/waitlist/route.ts) route,
-  which stores signups in the project's existing cloud Postgres
-  (`waitlist_emails` table — created automatically on first insert; emails are
-  lowercased and deduped with `ON CONFLICT DO NOTHING`). Set `DATABASE_URL` in
-  `.env.local` (same value as `backend/.env`). `NEXT_PUBLIC_WAITLIST_ENDPOINT`
-  overrides the target if you ever want an external service instead.
-- **Support** — `NEXT_PUBLIC_SUPPORT_ENDPOINT`, posted from
-  [`src/app/support/SupportContent.tsx`](src/app/support/SupportContent.tsx);
-  falls back to a local no-op success state when unset.
-
-Because of the API route, deploy the site on a Node host (Vercel, `next start`,
-etc.) rather than as a pure static export. Every page is still statically
-prerendered.
-
-## Notes
-
-- Animations (`fadeUp`, `softIn`, `pulseRing`, `scanSpin`, `pillFloat`,
-  `growBar`) are ported verbatim and fully disabled under
-  `prefers-reduced-motion: reduce`.
-- The responsive behavior is driven by the design's own `data-r` attribute
-  system in `globals.css` — breakpoints at 1040 / 980 / 900 / 760 / 560 px.
-- Verified at 375 / 768 / 1440 with no console errors and no horizontal
-  overflow on any route.
+<div align="center">
+<sub><b>SubDrip</b> © 2026 · One email when it ships. Nothing else.</sub>
+</div>
