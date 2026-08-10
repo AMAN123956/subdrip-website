@@ -296,7 +296,16 @@ export const DEMO_SCREENS = [
   { k: "profileNotifications", l: "Reminders", d: "Channels and alarms" },
 ] as const;
 
-export type DemoScreenKey = (typeof DEMO_SCREENS)[number]["k"] | "welcomeAuth";
+export type DemoScreenKey =
+  | (typeof DEMO_SCREENS)[number]["k"]
+  | "welcomeAuth"
+  | "googleSignIn"
+  | "emailOtp"
+  | "passkeySignIn"
+  | "gmailConnect"
+  | "scan"
+  | "review"
+  | "reveal";
 
 export const DEMO_TIPS: Record<
   string,

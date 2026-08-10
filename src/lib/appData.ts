@@ -34,20 +34,36 @@ export type Subscription = {
   billedCycle: "month" | "year";
   renewDate: string;
   status: "active" | "needsReview" | "annual";
+  confidence: number;
+  source: "Gmail" | "SMS";
+  snippet: string;
 };
 
 export const SUBSCRIPTIONS: Subscription[] = [
-  { id: "netflix", name: "Netflix Premium", category: "Entertainment", monthly: 649, billedAmount: 649, billedCycle: "month", renewDate: "2026-07-14", status: "active" },
-  { id: "chatgpt", name: "ChatGPT Plus", category: "Productivity", monthly: 1650, billedAmount: 1650, billedCycle: "month", renewDate: "2026-07-16", status: "active" },
-  { id: "icloud", name: "iCloud+ 200GB", category: "Utilities", monthly: 219, billedAmount: 219, billedCycle: "month", renewDate: "2026-07-18", status: "active" },
-  { id: "spotify", name: "Spotify Premium", category: "Entertainment", monthly: 119, billedAmount: 119, billedCycle: "month", renewDate: "2026-07-20", status: "active" },
-  { id: "swiggy", name: "Swiggy One", category: "Food", monthly: 138, billedAmount: 138, billedCycle: "month", renewDate: "2026-07-22", status: "needsReview" },
-  { id: "youtube", name: "YouTube Premium", category: "Entertainment", monthly: 129, billedAmount: 129, billedCycle: "month", renewDate: "2026-07-25", status: "active" },
-  { id: "googleone", name: "Google One 2TB", category: "Utilities", monthly: 325, billedAmount: 325, billedCycle: "month", renewDate: "2026-07-30", status: "active" },
-  { id: "disney", name: "Disney+ Hotstar", category: "Entertainment", monthly: 299, billedAmount: 299, billedCycle: "month", renewDate: "2026-08-02", status: "active" },
-  { id: "notion", name: "Notion Plus", category: "Productivity", monthly: 400, billedAmount: 400, billedCycle: "month", renewDate: "2026-08-05", status: "active" },
-  { id: "adobe", name: "Adobe Photography Plan", category: "Productivity", monthly: 799, billedAmount: 799, billedCycle: "month", renewDate: "2026-08-10", status: "active" },
-  { id: "amazon", name: "Amazon Prime", category: "Shopping", monthly: 133, billedAmount: 1596, billedCycle: "year", renewDate: "2026-12-04", status: "annual" },
+  { id: "netflix", name: "Netflix Premium", category: "Entertainment", monthly: 649, billedAmount: 649, billedCycle: "month", renewDate: "2026-07-14", status: "active", confidence: 98, source: "Gmail", snippet: "Your Netflix bill: ₹649 charged on Jul 14 statement" },
+  { id: "chatgpt", name: "ChatGPT Plus", category: "Productivity", monthly: 1650, billedAmount: 1650, billedCycle: "month", renewDate: "2026-07-16", status: "active", confidence: 95, source: "Gmail", snippet: "OpenAI: ChatGPT Plus subscription payment ₹1,650" },
+  { id: "icloud", name: "iCloud+ 200GB", category: "Utilities", monthly: 219, billedAmount: 219, billedCycle: "month", renewDate: "2026-07-18", status: "active", confidence: 99, source: "Gmail", snippet: "Apple: iCloud+ 200GB storage — ₹219 monthly" },
+  { id: "spotify", name: "Spotify Premium", category: "Entertainment", monthly: 119, billedAmount: 119, billedCycle: "month", renewDate: "2026-07-20", status: "active", confidence: 96, source: "Gmail", snippet: "Payment confirmation: Spotify Premium ₹119/mo" },
+  { id: "swiggy", name: "Swiggy One", category: "Food", monthly: 138, billedAmount: 138, billedCycle: "month", renewDate: "2026-07-22", status: "needsReview", confidence: 85, source: "SMS", snippet: "Swiggy One membership fee debited — ₹138" },
+  { id: "youtube", name: "YouTube Premium", category: "Entertainment", monthly: 129, billedAmount: 129, billedCycle: "month", renewDate: "2026-07-25", status: "active", confidence: 94, source: "Gmail", snippet: "Receipt: YouTube Premium renewed for ₹129" },
+  { id: "googleone", name: "Google One 2TB", category: "Utilities", monthly: 325, billedAmount: 325, billedCycle: "month", renewDate: "2026-07-30", status: "active", confidence: 97, source: "Gmail", snippet: "Google One 2TB — payment receipt ₹325" },
+  { id: "disney", name: "Disney+ Hotstar", category: "Entertainment", monthly: 299, billedAmount: 299, billedCycle: "month", renewDate: "2026-08-02", status: "active", confidence: 91, source: "Gmail", snippet: "Disney+ Hotstar — payment successful, ₹299" },
+  { id: "notion", name: "Notion Plus", category: "Productivity", monthly: 400, billedAmount: 400, billedCycle: "month", renewDate: "2026-08-05", status: "active", confidence: 90, source: "Gmail", snippet: "Notion: Plus plan payment received ₹400" },
+  { id: "adobe", name: "Adobe Photography Plan", category: "Productivity", monthly: 799, billedAmount: 799, billedCycle: "month", renewDate: "2026-08-10", status: "active", confidence: 93, source: "Gmail", snippet: "Adobe: Photography Plan renewed at ₹799" },
+  { id: "amazon", name: "Amazon Prime", category: "Shopping", monthly: 133, billedAmount: 1596, billedCycle: "year", renewDate: "2026-12-04", status: "annual", confidence: 87, source: "SMS", snippet: "Your Prime membership renews at ₹1,596/yr" },
+];
+
+export const GMAIL_PERMISSION_LINES = [
+  "Reads receipts and renewal emails only.",
+  "Never modifies or deletes anything in your inbox.",
+  "You review every detected subscription before it saves.",
+];
+
+export const SCAN_STEP_LABELS = [
+  "Searching receipts and renewal emails",
+  "Grouping recurring merchants",
+  "Estimating billing cycles",
+  "Preparing your spend overview",
 ];
 
 export const TOTAL_MONTHLY = SUBSCRIPTIONS.reduce((s, x) => s + x.monthly, 0);

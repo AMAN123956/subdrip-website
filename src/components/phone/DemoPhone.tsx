@@ -1,6 +1,6 @@
 "use client";
 
-import type { CSSProperties, ReactNode } from "react";
+import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
 import {
   buildProjChart,
   buildTreeCategories,
@@ -12,10 +12,12 @@ import {
   daysUntil,
   fmtINR,
   fmtShortDate,
+  GMAIL_PERMISSION_LINES,
   INSIGHT_TYPE_ORDER,
   NOTIF_ROWS,
   PAYMENT_METHOD,
   SAVINGS_INSIGHTS,
+  SCAN_STEP_LABELS,
   sortedByMonthlyDesc,
   STATUS_META,
   SUBSCRIPTIONS,
@@ -136,7 +138,9 @@ function TabBar({
    Screens
    ========================================================================= */
 
-function WelcomeAuthScreen() {
+type Nav = (screen: DemoScreenKey) => void;
+
+function WelcomeAuthScreen({ onNavigate }: { onNavigate?: Nav }) {
   return (
     <div style={{ height: "100%", display: "flex", flexDirection: "column", background: pageBg, padding: "56px 26px 32px" }}>
       <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 22, textAlign: "center" }}>
@@ -155,15 +159,19 @@ function WelcomeAuthScreen() {
         </div>
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-        <div
+        <button
+          onClick={() => onNavigate?.("googleSignIn")}
           style={{
             width: "100%",
             padding: 16,
             borderRadius: 16,
             background: teal,
             color: "#fff",
+            border: "none",
+            fontFamily: "var(--font-work-sans), sans-serif",
             fontSize: 15.5,
             fontWeight: 600,
+            cursor: "pointer",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -188,8 +196,9 @@ function WelcomeAuthScreen() {
             G
           </span>
           Continue with Google
-        </div>
-        <div
+        </button>
+        <button
+          onClick={() => onNavigate?.("emailOtp")}
           style={{
             width: "100%",
             padding: 16,
@@ -197,14 +206,21 @@ function WelcomeAuthScreen() {
             background: "#fff",
             color: "oklch(30% 0.01 80)",
             border: "1.5px solid oklch(85% 0.01 80)",
+            fontFamily: "var(--font-work-sans), sans-serif",
             fontSize: 15.5,
             fontWeight: 600,
+            cursor: "pointer",
             textAlign: "center",
           }}
         >
           Continue with email
-        </div>
-        <span style={{ textAlign: "center", fontSize: 14, fontWeight: 600, color: teal, marginTop: 2 }}>Use passkey</span>
+        </button>
+        <span
+          onClick={() => onNavigate?.("passkeySignIn")}
+          style={{ textAlign: "center", fontSize: 14, fontWeight: 600, color: teal, marginTop: 2, cursor: "pointer" }}
+        >
+          Use passkey
+        </span>
       </div>
       <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "6px 14px", marginTop: 26 }}>
         {["Read-only Gmail access", "No bank login required", "You can disconnect anytime"].map((t) => (
@@ -212,6 +228,394 @@ function WelcomeAuthScreen() {
             {t}
           </span>
         ))}
+      </div>
+    </div>
+  );
+}
+
+function GoogleSignInScreen({ onNavigate }: { onNavigate?: Nav }) {
+  return (
+    <div style={{ height: "100%", display: "flex", flexDirection: "column", background: pageBg, padding: "20px 24px 28px" }}>
+      <div onClick={() => onNavigate?.("welcomeAuth")} style={{ width: 36, height: 36, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", marginLeft: -8 }}>
+        <div style={{ width: 9, height: 9, borderLeft: "2px solid oklch(30% 0.01 80)", borderBottom: "2px solid oklch(30% 0.01 80)", transform: "rotate(45deg)" }} />
+      </div>
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 24 }}>
+        <div style={{ width: 60, height: 60, borderRadius: "50%", background: "#fff", boxShadow: "0 6px 20px rgba(0,0,0,0.06)", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: sora, fontSize: 24, fontWeight: 800, color: "oklch(45% 0.1 260)" }}>G</div>
+        <div style={{ textAlign: "center" }}>
+          <div style={{ fontFamily: sora, fontSize: 20, fontWeight: 700, color: "oklch(22% 0.01 80)" }}>Continue with your Google account</div>
+          <div style={{ fontSize: 13.5, color: "oklch(52% 0.01 80)", marginTop: 10, lineHeight: 1.5, padding: "0 10px" }}>We use Google sign-in to make setup fast and secure.</div>
+        </div>
+        <div style={{ width: "100%", background: "#fff", borderRadius: 18, padding: "14px 16px", display: "flex", alignItems: "center", gap: 12, boxShadow: "0 2px 10px rgba(0,0,0,0.04)" }}>
+          <div style={{ width: 40, height: 40, borderRadius: "50%", background: "oklch(94% 0.03 175)", color: "oklch(38% 0.075 175)", fontFamily: sora, fontWeight: 700, fontSize: 15, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>AD</div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontSize: 14.5, fontWeight: 600, color: "oklch(22% 0.01 80)" }}>Aman Dixit</div>
+            <div style={{ fontSize: 12.5, color: "oklch(52% 0.01 80)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>aman.dixit@example.com</div>
+          </div>
+        </div>
+      </div>
+      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+        <button
+          onClick={() => onNavigate?.("gmailConnect")}
+          style={{ width: "100%", padding: 16, borderRadius: 16, background: teal, color: "#fff", border: "none", fontFamily: "var(--font-work-sans), sans-serif", fontSize: 15.5, fontWeight: 600, cursor: "pointer" }}
+        >
+          Continue as Aman Dixit
+        </button>
+        <span onClick={() => onNavigate?.("welcomeAuth")} style={{ textAlign: "center", fontSize: 13.5, fontWeight: 600, color: "oklch(52% 0.01 80)", cursor: "pointer" }}>Use a different account</span>
+      </div>
+    </div>
+  );
+}
+
+function EmailOtpScreen({ onNavigate }: { onNavigate?: Nav }) {
+  const [step, setStep] = useState<"email" | "code">("email");
+  return (
+    <div style={{ height: "100%", display: "flex", flexDirection: "column", background: pageBg, padding: "20px 24px 28px" }}>
+      <div
+        onClick={() => (step === "code" ? setStep("email") : onNavigate?.("welcomeAuth"))}
+        style={{ width: 36, height: 36, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", marginLeft: -8 }}
+      >
+        <div style={{ width: 9, height: 9, borderLeft: "2px solid oklch(30% 0.01 80)", borderBottom: "2px solid oklch(30% 0.01 80)", transform: "rotate(45deg)" }} />
+      </div>
+
+      {step === "email" ? (
+        <>
+          <div style={{ marginTop: 18 }}>
+            <div style={{ fontFamily: sora, fontSize: 21, fontWeight: 700, color: "oklch(22% 0.01 80)" }}>Continue with email</div>
+            <div style={{ fontSize: 13.5, color: "oklch(52% 0.01 80)", marginTop: 8, lineHeight: 1.5 }}>We&rsquo;ll send a secure verification code to your email. No password needed.</div>
+            <div style={{ marginTop: 24 }}>
+              <div style={{ fontSize: 12.5, fontWeight: 600, color: "oklch(45% 0.01 80)", marginBottom: 8 }}>EMAIL ADDRESS</div>
+              <div style={{ background: "#fff", borderRadius: 14, padding: "15px 16px", fontSize: 15, color: "oklch(22% 0.01 80)", border: "1.5px solid oklch(88% 0.01 80)" }}>aman.dixit@example.com</div>
+            </div>
+          </div>
+          <div style={{ flex: 1 }} />
+          <button
+            onClick={() => setStep("code")}
+            style={{ width: "100%", padding: 16, borderRadius: 16, background: teal, color: "#fff", border: "none", fontFamily: "var(--font-work-sans), sans-serif", fontSize: 15.5, fontWeight: 600, cursor: "pointer" }}
+          >
+            Send verification code
+          </button>
+        </>
+      ) : (
+        <>
+          <div style={{ marginTop: 18 }}>
+            <div style={{ fontFamily: sora, fontSize: 21, fontWeight: 700, color: "oklch(22% 0.01 80)" }}>Enter verification code</div>
+            <div style={{ fontSize: 13.5, color: "oklch(52% 0.01 80)", marginTop: 8, lineHeight: 1.5 }}>
+              Sent to aman.dixit@example.com &nbsp;·&nbsp;{" "}
+              <span onClick={() => setStep("email")} style={{ color: teal, fontWeight: 600, cursor: "pointer" }}>Edit</span>
+            </div>
+            <div style={{ display: "flex", gap: 8, marginTop: 24 }}>
+              {[0, 1, 2, 3].map((i) => (
+                <div key={i} style={{ flex: 1, aspectRatio: "1", borderRadius: 12, background: "#fff", border: `1.5px solid ${teal}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, fontWeight: 700, color: "oklch(22% 0.01 80)", fontFamily: sora }}>•</div>
+              ))}
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 18 }}>
+              <span style={{ fontSize: 13, color: "oklch(56% 0.01 80)" }}>Resend code in 0:28</span>
+              <span style={{ fontSize: 13, fontWeight: 600, color: teal, cursor: "pointer" }}>Didn&rsquo;t get a code?</span>
+            </div>
+          </div>
+          <div style={{ flex: 1 }} />
+          <button
+            onClick={() => onNavigate?.("gmailConnect")}
+            style={{ width: "100%", padding: 16, borderRadius: 16, background: teal, color: "#fff", border: "none", fontFamily: "var(--font-work-sans), sans-serif", fontSize: 15.5, fontWeight: 600, cursor: "pointer" }}
+          >
+            Verify
+          </button>
+        </>
+      )}
+    </div>
+  );
+}
+
+function PasskeySignInScreen({ onNavigate }: { onNavigate?: Nav }) {
+  return (
+    <div style={{ height: "100%", display: "flex", flexDirection: "column", background: pageBg, padding: "40px 26px 32px" }}>
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 22, textAlign: "center" }}>
+        <div style={{ width: 68, height: 68, borderRadius: 20, background: "oklch(94% 0.03 175)", display: "flex", alignItems: "center", justifyContent: "center", position: "relative" }}>
+          <div style={{ width: 32, height: 32, borderRadius: "50%", border: `2.5px solid ${teal}` }} />
+          <div style={{ position: "absolute", width: 18, height: 18, borderRadius: "50%", border: `2.5px solid ${teal}` }} />
+        </div>
+        <div>
+          <div style={{ fontFamily: sora, fontSize: 22, fontWeight: 700, color: "oklch(22% 0.01 80)" }}>Sign in with passkey</div>
+          <div style={{ fontSize: 14, color: "oklch(52% 0.01 80)", marginTop: 12, lineHeight: 1.5, padding: "0 10px" }}>Use your fingerprint, face, or device lock to continue.</div>
+        </div>
+      </div>
+      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+        <button
+          onClick={() => onNavigate?.("gmailConnect")}
+          style={{ width: "100%", padding: 16, borderRadius: 16, background: teal, color: "#fff", border: "none", fontFamily: "var(--font-work-sans), sans-serif", fontSize: 15.5, fontWeight: 600, cursor: "pointer" }}
+        >
+          Continue with device authentication
+        </button>
+        <span onClick={() => onNavigate?.("welcomeAuth")} style={{ textAlign: "center", fontSize: 14, fontWeight: 600, color: "oklch(52% 0.01 80)", cursor: "pointer" }}>Use another method</span>
+      </div>
+    </div>
+  );
+}
+
+function GmailConnectScreen({ onNavigate }: { onNavigate?: Nav }) {
+  const [connecting, setConnecting] = useState(false);
+  useEffect(() => {
+    if (!connecting) return;
+    const t = setTimeout(() => onNavigate?.("scan"), 700);
+    return () => clearTimeout(t);
+  }, [connecting, onNavigate]);
+  return (
+    <div style={{ height: "100%", display: "flex", flexDirection: "column", background: pageBg, padding: "20px 24px 28px" }}>
+      <div onClick={() => onNavigate?.("welcomeAuth")} style={{ width: 36, height: 36, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", marginLeft: -8 }}>
+        <div style={{ width: 9, height: 9, borderLeft: "2px solid oklch(30% 0.01 80)", borderBottom: "2px solid oklch(30% 0.01 80)", transform: "rotate(45deg)" }} />
+      </div>
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: 16, marginTop: 14 }}>
+        <div style={{ width: 64, height: 64, borderRadius: 20, background: "#fff", boxShadow: "0 6px 20px rgba(0,0,0,0.06)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div style={{ width: 26, height: 20, border: `2.5px solid ${teal}`, borderRadius: 3, position: "relative" }}>
+            <div style={{ position: "absolute", top: -1, left: 0, width: "100%", height: "100%", background: "linear-gradient(135deg, transparent 45%, oklch(94% 0.03 175) 46%, oklch(94% 0.03 175) 54%, transparent 55%)" }} />
+          </div>
+        </div>
+        <div style={{ fontFamily: sora, fontSize: 20, fontWeight: 700, color: "oklch(22% 0.01 80)" }}>Connect your Gmail</div>
+        <div style={{ fontSize: 14, color: "oklch(52% 0.01 80)", lineHeight: 1.5, padding: "0 6px" }}>We&rsquo;ll scan for receipts and renewal emails to find your subscriptions.</div>
+      </div>
+
+      <div style={{ background: "#fff", borderRadius: 18, padding: 18, marginTop: 24, display: "flex", flexDirection: "column", gap: 12 }}>
+        {GMAIL_PERMISSION_LINES.map((line) => (
+          <div key={line} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
+            <div style={{ width: 7, height: 7, borderRadius: "50%", background: "oklch(56% 0.11 150)", marginTop: 6, flexShrink: 0 }} />
+            <div style={{ fontSize: 13.5, color: "oklch(30% 0.01 80)", lineHeight: 1.5 }}>{line}</div>
+          </div>
+        ))}
+      </div>
+
+      <div style={{ flex: 1 }} />
+      <button
+        onClick={() => setConnecting(true)}
+        style={{ width: "100%", padding: 16, borderRadius: 16, background: teal, color: "#fff", border: "none", fontFamily: "var(--font-work-sans), sans-serif", fontSize: 15.5, fontWeight: 600, cursor: connecting ? "wait" : "pointer", opacity: connecting ? 0.85 : 1 }}
+      >
+        {connecting ? "Connecting…" : "Connect Gmail"}
+      </button>
+    </div>
+  );
+}
+
+function ScanScreen({ onNavigate }: { onNavigate?: Nav }) {
+  const [progress, setProgress] = useState(0);
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setProgress((p) => {
+        const next = Math.min(100, p + 4);
+        if (next >= 100) clearInterval(timer);
+        return next;
+      });
+    }, 90);
+    return () => clearInterval(timer);
+  }, []);
+
+  const stepThresholds = [1, 30, 60, 90];
+  const steps = SCAN_STEP_LABELS.map((label, i) => ({ label, done: progress >= stepThresholds[i] }));
+  const currentStepIdx = steps.reduce((acc, st, i) => (st.done ? i : acc), 0);
+  const statusText = progress >= 100 ? "All done — tap to see what we found" : SCAN_STEP_LABELS[currentStepIdx];
+
+  return (
+    <div style={{ height: "100%", display: "flex", flexDirection: "column", background: "oklch(20% 0.015 175)", padding: "24px 24px 32px", color: "#fff" }}>
+      <div style={{ display: "flex", justifyContent: "flex-end" }}>
+        <span onClick={() => onNavigate?.("dashboard")} style={{ fontSize: 13, fontWeight: 600, color: "oklch(80% 0.02 175)", cursor: "pointer" }}>Continue in background</span>
+      </div>
+      <div
+        onClick={() => {
+          if (progress >= 100) onNavigate?.("review");
+        }}
+        style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 22, cursor: progress >= 100 ? "pointer" : "default" }}
+      >
+        <div style={{ width: 148, height: 148, borderRadius: "50%", background: `conic-gradient(oklch(70% 0.09 175) ${progress}%, oklch(32% 0.02 175) 0)`, display: "flex", alignItems: "center", justifyContent: "center", position: "relative" }}>
+          <div style={{ width: 118, height: 118, borderRadius: "50%", background: "oklch(20% 0.015 175)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <span style={{ fontFamily: sora, fontSize: 30, fontWeight: 700 }}>{progress}%</span>
+          </div>
+        </div>
+        <div style={{ fontSize: 15, fontWeight: 600, textAlign: "center", minHeight: 22 }}>{statusText}</div>
+        {progress >= 100 && (
+          <div style={{ padding: "13px 24px", borderRadius: 14, background: "#fff", color: "oklch(30% 0.05 175)", fontFamily: "var(--font-work-sans), sans-serif", fontSize: 14.5, fontWeight: 700 }}>See what we found</div>
+        )}
+      </div>
+      <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+        {steps.map((step) => (
+          <div key={step.label} style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <div style={{ width: 20, height: 20, borderRadius: "50%", background: step.done ? "#fff" : "oklch(32% 0.02 175)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              {step.done && (
+                <div style={{ width: 7, height: 4, borderLeft: "2px solid oklch(20% 0.015 175)", borderBottom: "2px solid oklch(20% 0.015 175)", transform: "rotate(-45deg)", marginTop: -2 }} />
+              )}
+            </div>
+            <span style={{ fontSize: 13.5, color: step.done ? "#fff" : "oklch(60% 0.02 175)" }}>{step.label}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+type ReviewStatus = "pending" | "confirmed" | "rejected";
+type ReviewState = Record<string, ReviewStatus>;
+
+export const initialReviewState = (): ReviewState =>
+  Object.fromEntries(
+    SUBSCRIPTIONS.map((s) => [s.id, s.confidence >= 95 ? "confirmed" : "pending"]),
+  ) as ReviewState;
+
+function ReviewScreen({
+  onNavigate,
+  reviewState,
+  setReviewState,
+}: {
+  onNavigate?: Nav;
+  reviewState: ReviewState;
+  setReviewState: (s: ReviewState) => void;
+}) {
+  const autoConfirmedIds = SUBSCRIPTIONS.filter((s) => s.confidence >= 95).map((s) => s.id);
+  const reviewed = SUBSCRIPTIONS.filter((s) => reviewState[s.id] !== "pending").length;
+  const confirmed = SUBSCRIPTIONS.filter((s) => reviewState[s.id] === "confirmed").length;
+  const total = SUBSCRIPTIONS.length;
+  const progressPct = Math.round((reviewed / total) * 100);
+  const setStatus = (id: string, status: ReviewStatus) =>
+    setReviewState({ ...reviewState, [id]: status });
+
+  return (
+    <div style={{ minHeight: "100%", display: "flex", flexDirection: "column", background: pageBg }}>
+      <div style={{ padding: "22px 20px 14px", position: "sticky", top: 0, background: pageBg, zIndex: 2 }}>
+        <div style={{ fontFamily: sora, fontSize: 19, fontWeight: 700, color: "oklch(22% 0.01 80)" }}>Review subscriptions</div>
+        <div style={{ fontSize: 13, color: "oklch(52% 0.01 80)", marginTop: 4 }}>
+          {confirmed} confirmed · {total - reviewed} left to review
+        </div>
+        <div style={{ fontSize: 12, color: "oklch(45% 0.08 150)", marginTop: 4 }}>Very high matches are confirmed for you — change any of them.</div>
+        <div style={{ height: 5, borderRadius: 3, background: "oklch(90% 0.01 80)", marginTop: 10, overflow: "hidden" }}>
+          <div style={{ height: "100%", width: `${progressPct}%`, background: teal, borderRadius: 3, transition: "width 0.3s" }} />
+        </div>
+      </div>
+
+      <div style={{ padding: "4px 16px 100px", display: "flex", flexDirection: "column", gap: 10 }}>
+        {SUBSCRIPTIONS.map((item) => {
+          const status = reviewState[item.id];
+          const rejected = status === "rejected";
+          const isConfirmed = status === "confirmed";
+          const confidenceLabel = item.confidence >= 95 ? "Very high match" : item.confidence >= 90 ? "High match" : "Medium match";
+          return (
+            <div key={item.id} style={{ background: "#fff", borderRadius: 18, padding: 15, opacity: rejected ? 0.45 : 1 }}>
+              <div style={{ display: "flex", gap: 12 }}>
+                <div style={{ width: 42, height: 42, borderRadius: 12, background: catTint(item.category), color: catText(item.category), display: "flex", alignItems: "center", justifyContent: "center", fontFamily: sora, fontWeight: 700, fontSize: 15, flexShrink: 0 }}>{item.name[0]}</div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", gap: 8 }}>
+                    <span style={{ fontSize: 15, fontWeight: 600, color: "oklch(22% 0.01 80)" }}>{item.name}</span>
+                    <span style={{ fontSize: 15, fontWeight: 700, color: "oklch(22% 0.01 80)", whiteSpace: "nowrap" }}>
+                      {fmtINR(item.billedAmount)}/{item.billedCycle}
+                    </span>
+                  </div>
+                  <div style={{ display: "flex", gap: 6, marginTop: 5, flexWrap: "wrap" }}>
+                    <span style={{ fontSize: 11, fontWeight: 600, padding: "3px 8px", borderRadius: 100, background: catTint(item.category), color: catText(item.category) }}>{item.category}</span>
+                    <span style={{ fontSize: 11, fontWeight: 600, padding: "3px 8px", borderRadius: 100, background: "oklch(93% 0.01 80)", color: "oklch(45% 0.01 80)" }}>via {item.source}</span>
+                    <span style={{ fontSize: 11, fontWeight: 600, padding: "3px 8px", borderRadius: 100, background: item.confidence >= 90 ? "oklch(94% 0.04 150)" : "oklch(95% 0.04 80)", color: item.confidence >= 90 ? "oklch(38% 0.1 150)" : "oklch(45% 0.06 80)" }}>{confidenceLabel}</span>
+                    {isConfirmed && autoConfirmedIds.includes(item.id) && (
+                      <span style={{ fontSize: 11, fontWeight: 600, padding: "3px 8px", borderRadius: 100, background: "oklch(94% 0.04 150)", color: "oklch(38% 0.1 150)" }}>Auto-confirmed</span>
+                    )}
+                  </div>
+                  <div style={{ fontSize: 12, color: "oklch(55% 0.01 80)", marginTop: 8, fontStyle: "italic" }}>&ldquo;{item.snippet}&rdquo;</div>
+                </div>
+              </div>
+              <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
+                <button
+                  onClick={() => setStatus(item.id, "rejected")}
+                  style={{ flex: 1, padding: 10, borderRadius: 12, border: "1.5px solid oklch(88% 0.02 25)", background: rejected ? "oklch(94% 0.03 25)" : "#fff", color: "oklch(50% 0.11 25)", fontFamily: "var(--font-work-sans), sans-serif", fontSize: 13, fontWeight: 600, cursor: "pointer" }}
+                >
+                  Reject
+                </button>
+                <button
+                  onClick={() => setStatus(item.id, "confirmed")}
+                  style={{ flex: 1, padding: 10, borderRadius: 12, border: "1.5px solid oklch(88% 0.01 80)", background: "#fff", color: "oklch(40% 0.01 80)", fontFamily: "var(--font-work-sans), sans-serif", fontSize: 13, fontWeight: 600, cursor: "pointer" }}
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => setStatus(item.id, "confirmed")}
+                  style={{ flex: 1.4, padding: 10, borderRadius: 12, border: "none", background: isConfirmed ? "oklch(50% 0.1 150)" : teal, color: "#fff", fontFamily: "var(--font-work-sans), sans-serif", fontSize: 13, fontWeight: 600, cursor: "pointer" }}
+                >
+                  {isConfirmed ? "Confirmed ✓" : "Confirm"}
+                </button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div style={{ position: "sticky", bottom: 0, padding: "14px 20px 20px", background: "linear-gradient(to top, oklch(97% 0.012 80) 70%, transparent)" }}>
+        <button
+          onClick={() => {
+            if (confirmed > 0) onNavigate?.("reveal");
+          }}
+          style={{ width: "100%", padding: 16, borderRadius: 16, border: "none", background: confirmed > 0 ? teal : "oklch(75% 0.01 80)", color: "#fff", fontFamily: "var(--font-work-sans), sans-serif", fontSize: 15.5, fontWeight: 600, cursor: confirmed > 0 ? "pointer" : "not-allowed" }}
+        >
+          Continue
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function RevealScreen({
+  onNavigate,
+  reviewState,
+}: {
+  onNavigate?: Nav;
+  reviewState: ReviewState;
+}) {
+  const confirmedSubs = SUBSCRIPTIONS.filter((s) => reviewState[s.id] === "confirmed");
+  const monthlyTotal = confirmedSubs.reduce((a, x) => a + x.monthly, 0);
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    const steps = 24;
+    let i = 0;
+    const timer = setInterval(() => {
+      i += 1;
+      setCount(Math.round((monthlyTotal * i) / steps));
+      if (i >= steps) clearInterval(timer);
+    }, 30);
+    return () => clearInterval(timer);
+  }, [monthlyTotal]);
+
+  const byCategory: Record<string, number> = {};
+  confirmedSubs.forEach((s) => {
+    byCategory[s.category] = (byCategory[s.category] || 0) + s.monthly;
+  });
+  const topCategory = Object.entries(byCategory).sort((a, b) => b[1] - a[1])[0];
+  const topPct = topCategory && monthlyTotal > 0 ? Math.round((topCategory[1] / monthlyTotal) * 100) : 0;
+  const nextRenewal = [...confirmedSubs].sort((a, b) => daysUntil(a.renewDate) - daysUntil(b.renewDate))[0];
+
+  return (
+    <div style={{ height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: teal, padding: "28px 26px", textAlign: "center", color: "#fff" }}>
+      <div style={{ fontSize: 13.5, fontWeight: 600, color: "oklch(88% 0.03 175)", textTransform: "uppercase", letterSpacing: "0.04em" }}>You spend</div>
+      <div style={{ fontFamily: sora, fontSize: 46, fontWeight: 800, marginTop: 10, animation: "fadeUp 0.4s ease" }}>{fmtINR(count)}</div>
+      <div style={{ fontSize: 15, color: "oklch(90% 0.03 175)", marginTop: 2 }}>every month on subscriptions</div>
+      <div style={{ fontSize: 15, color: "oklch(90% 0.03 175)", marginTop: 14 }}>{fmtINR(monthlyTotal * 12)} a year</div>
+
+      <div style={{ background: "rgba(255,255,255,0.12)", borderRadius: 18, padding: "16px 18px", marginTop: 24, width: "100%", display: "flex", flexDirection: "column", gap: 10 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13.5 }}>
+          <span>{confirmedSubs.length} active subscriptions found</span>
+        </div>
+        {topCategory && (
+          <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13.5 }}>
+            <span>Top category</span>
+            <span style={{ fontWeight: 700 }}>{topCategory[0]} · {topPct}%</span>
+          </div>
+        )}
+        {nextRenewal && (
+          <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13.5 }}>
+            <span>Next renewal</span>
+            <span style={{ fontWeight: 700 }}>in {daysUntil(nextRenewal.renewDate)} days</span>
+          </div>
+        )}
+      </div>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: 12, width: "100%", marginTop: 26 }}>
+        <button
+          onClick={() => onNavigate?.("dashboard")}
+          style={{ width: "100%", padding: 16, borderRadius: 16, border: "none", background: "#fff", color: teal, fontFamily: "var(--font-work-sans), sans-serif", fontSize: 15.5, fontWeight: 700, cursor: "pointer" }}
+        >
+          See my analysis
+        </button>
+        <span onClick={() => onNavigate?.("analyticsHub")} style={{ fontSize: 14, fontWeight: 600, color: "rgba(255,255,255,0.85)", cursor: "pointer" }}>Review details</span>
       </div>
     </div>
   );
@@ -1135,6 +1539,22 @@ export default function DemoPhone({
   screen: DemoScreenKey;
   onNavigate?: (screen: DemoScreenKey) => void;
 }) {
+  const [reviewState, setReviewState] = useState<ReviewState>(initialReviewState);
+
+  // A fresh scan produces a fresh review queue, exactly like the prototype.
+  // State is adjusted during render (not in an effect) per React guidance.
+  const [prevScreen, setPrevScreen] = useState<DemoScreenKey>(screen);
+  if (prevScreen !== screen) {
+    setPrevScreen(screen);
+    if (screen === "scan") setReviewState(initialReviewState());
+  }
+
+  // Full-bleed dark screens color the status bar to match.
+  const statusBarBg =
+    screen === "scan" ? "oklch(20% 0.015 175)" : screen === "reveal" ? teal : pageBg;
+  const statusBarFg =
+    screen === "scan" || screen === "reveal" ? "oklch(92% 0.02 175)" : "oklch(35% 0.01 80)";
+
   return (
     <div
       style={{
@@ -1164,9 +1584,9 @@ export default function DemoPhone({
             padding: "0 24px",
             fontSize: 12,
             fontWeight: 600,
-            color: "oklch(35% 0.01 80)",
+            color: statusBarFg,
             flexShrink: 0,
-            background: pageBg,
+            background: statusBarBg,
           }}
         >
           <span>9:41</span>
@@ -1185,7 +1605,22 @@ export default function DemoPhone({
             animation: "softIn 0.35s ease",
           }}
         >
-          {screen === "welcomeAuth" && <WelcomeAuthScreen />}
+          {screen === "welcomeAuth" && <WelcomeAuthScreen onNavigate={onNavigate} />}
+          {screen === "googleSignIn" && <GoogleSignInScreen onNavigate={onNavigate} />}
+          {screen === "emailOtp" && <EmailOtpScreen onNavigate={onNavigate} />}
+          {screen === "passkeySignIn" && <PasskeySignInScreen onNavigate={onNavigate} />}
+          {screen === "gmailConnect" && <GmailConnectScreen onNavigate={onNavigate} />}
+          {screen === "scan" && <ScanScreen onNavigate={onNavigate} />}
+          {screen === "review" && (
+            <ReviewScreen
+              onNavigate={onNavigate}
+              reviewState={reviewState}
+              setReviewState={setReviewState}
+            />
+          )}
+          {screen === "reveal" && (
+            <RevealScreen onNavigate={onNavigate} reviewState={reviewState} />
+          )}
           {screen === "dashboard" && <DashboardScreen onNavigate={onNavigate} />}
           {screen === "subscriptions" && <SubscriptionsScreen onNavigate={onNavigate} />}
           {screen === "analyticsHub" && <AnalyticsHubScreen onNavigate={onNavigate} />}

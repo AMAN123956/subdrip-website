@@ -24,6 +24,9 @@ function getSql() {
       max: 3,
       idle_timeout: 20,
       connect_timeout: 10,
+      // Supabase's transaction pooler (port 6543) does not support prepared
+      // statements; disabling them keeps both pooler and direct URLs working.
+      prepare: false,
     });
   }
   return globalThis.__waitlistSql;
