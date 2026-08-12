@@ -30,7 +30,7 @@ export default function HeroSection() {
         margin: "0 auto",
         padding: "88px 32px 72px",
         display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+        gridTemplateColumns: "repeat(auto-fit, minmax(min(300px, 100%), 1fr))",
         gap: 56,
         alignItems: "center",
         justifyItems: "center",

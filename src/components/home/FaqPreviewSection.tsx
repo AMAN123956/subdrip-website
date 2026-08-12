@@ -16,7 +16,7 @@ export default function FaqPreviewSection() {
           borderTop: "1px solid oklch(89% 0.01 80)",
           paddingTop: 64,
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+          gridTemplateColumns: "repeat(auto-fit, minmax(min(300px, 100%), 1fr))",
           gap: 56,
           alignItems: "start",
         }}

@@ -39,7 +39,7 @@ export default function PrivacyContent() {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))",
+          gridTemplateColumns: "repeat(auto-fit, minmax(min(190px, 100%), 1fr))",
           gap: 12,
           marginTop: 36,
         }}
