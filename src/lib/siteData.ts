@@ -250,7 +250,7 @@ export const PRIVACY_SECTIONS = [
 /* ---------------- Data deletion ---------------- */
 
 export const DELETION_ROUTES = [
-  { kicker: "In the app", title: "Delete from settings", steps: ["Open Profile, then Account.", "Choose Delete account.", "Confirm — the request is queued immediately.", "You are signed out on every device."] },
+  { kicker: "In the app", title: "Delete from settings", steps: ["Open Profile, then Data & privacy.", "Choose Delete account.", "Confirm — deletion happens immediately.", "You are signed out on every device."] },
   { kicker: "No app access", title: "Request by email", steps: ["Email privacy@subdrip.app from your account address.", "Include the email address the account uses.", "We confirm receipt and process the deletion.", "You get a confirmation when it completes."] },
 ];
 
