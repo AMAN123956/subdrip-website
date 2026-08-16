@@ -113,7 +113,7 @@ export default function Footer() {
           >
             Data deletion
           </Link>
-          <Link href="/support" style={{ cursor: "pointer", color: "inherit" }}>
+          <Link href="/terms" style={{ cursor: "pointer", color: "inherit" }}>
             Terms
           </Link>
         </div>
