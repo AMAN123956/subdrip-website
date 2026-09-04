@@ -1,0 +1,13 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.subdrip.app",
+      "sha256_cert_fingerprints": [
+        "58:C7:80:14:64:92:51:47:E8:9A:2C:36:25:90:B6:8D:D5:F3:FE:8E:07:91:46:58:2E:E5:DD:53:0C:7F:C4:3C",
+        "E4:A1:4A:3C:62:41:44:F3:EC:07:34:44:C3:D1:B5:F8:24:30:40:98:F9:7C:F8:86:19:21:9E:C5:D2:6A:20:4A"
+      ]
+    }
+  }
+]
