@@ -17,7 +17,11 @@ export default function Footer() {
           <div className="foot-join-title">Join the beta tester list</div>
           <p>
             Free during beta. Android testers get the install link right away; iPhone gets one email the day it ships.
-            Or <a href={APK.arm64.url}>download the APK</a> ({APK.arm64.size}).
+            {APK.available && (
+              <>
+                {" "}Or <a href={APK.arm64.url}>download the APK</a> ({APK.arm64.size}).
+              </>
+            )}
           </p>
         </div>
         <InlineSignup placement="footer" variant="footer" />
@@ -80,7 +84,7 @@ export default function Footer() {
                 marginTop: 16,
               }}
             >
-              {col.links.map((l) => (
+              {col.links.filter((l) => APK.available || l.href !== "/download#apk").map((l) => (
                 <Link
                   key={l.label}
                   href={l.href}

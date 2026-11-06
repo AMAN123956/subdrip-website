@@ -12,6 +12,7 @@ const STEPS = [
 
 /** Direct APK download for people who'd rather skip the Play Store. Anchored at /download#apk. */
 export default function ApkSection() {
+  if (!APK.available) return null;
   return (
     <section id="apk" className="apk">
       <div className="apk-head">

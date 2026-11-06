@@ -18,8 +18,11 @@ export const PLAY_STORE_URL = `https://play.google.com/store/apps/details?id=${A
 /**
  * Direct APK download (GitHub Releases on the public website repo). Bump the
  * tag + version when a new build is published; the page reads only these.
+ * `available` hides every APK link, the /download#apk section and the APK FAQ
+ * until the release assets actually exist — flip it to true after uploading.
  */
 export const APK = {
+  available: false,
   version: "1.0.0 (7)",
   minAndroid: "Android 9+",
   arm64: {

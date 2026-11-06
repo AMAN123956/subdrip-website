@@ -72,7 +72,11 @@ export default function SignupResult({
       )}
       <p className="su-fine">
         Play says &ldquo;not available&rdquo;? Google can take a little while to add new testers.
-        Or skip the Play Store: <a href={APK.arm64.url}>download the APK</a> ({APK.arm64.size}).
+        {APK.available && (
+          <>
+            {" "}Or skip the Play Store: <a href={APK.arm64.url}>download the APK</a> ({APK.arm64.size}).
+          </>
+        )}
       </p>
       <button type="button" className="su-link" onClick={onReset}>Use a different email</button>
     </div>

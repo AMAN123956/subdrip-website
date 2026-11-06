@@ -104,4 +104,7 @@ export const CATALOG_DEMO: { name: string; slug: string; plans: { name: string; 
   },
 ];
 
-export const HOME_FAQ_IDS = ["free", "q2", "personal", "apk"] as const;
+import { APK } from "@/lib/beta";
+
+/** The APK question replaces the iPhone one once the APK is published. */
+export const HOME_FAQ_IDS = ["free", "q2", "personal", APK.available ? "apk" : "iphone"] as const;

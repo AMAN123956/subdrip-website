@@ -143,7 +143,7 @@ export default function InlineSignup({
       <div id={`${inputId}-hint`} className={`is-hint${error ? " err" : ""}`} role={error ? "alert" : undefined}>
         {hint}
       </div>
-      {showApk && !ios && (
+      {showApk && !ios && APK.available && (
         <div className="is-apk">
           Prefer the APK?{" "}
           <a href={APK.arm64.url} onClick={() => track("apk_download", { placement, build: "arm64" })}>
