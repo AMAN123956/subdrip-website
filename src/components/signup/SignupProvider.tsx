@@ -12,9 +12,9 @@ import { detectPlatform, EMAIL_RE, type Platform, type SignupStatus } from "@/li
  * and reopen the install steps).
  */
 
-type SignupError = "invalid" | "rate" | "failed" | null;
+export type SignupError = "invalid" | "rate" | "failed" | null;
 
-type Done = { status: SignupStatus; email: string; platform: Platform };
+export type Done = { status: SignupStatus; email: string; platform: Platform };
 
 type SignupCtx = {
   isOpen: boolean;
@@ -30,6 +30,8 @@ type SignupCtx = {
   error: SignupError;
   done: Done | null;
   submit: () => Promise<void>;
+  /** Inline forms (hero, band, footer) keep their own field state and call this. */
+  submitEmail: (email: string, placement: string, honeypot?: string) => Promise<SignupError>;
   reset: () => void;
 };
 
@@ -120,46 +122,42 @@ export function SignupProvider({ children }: { children: React.ReactNode }) {
     setError(null);
   }, []);
 
+  /** One submit path for the popup and every inline form. Returns the error, or null on success. */
+  const submitEmail = useCallback(
+    async (rawEmail: string, placement: string, website = ""): Promise<SignupError> => {
+      const trimmed = rawEmail.trim();
+      if (!EMAIL_RE.test(trimmed)) return "invalid";
+      placementRef.current = placement;
+      try {
+        const res = await fetch("/api/testers", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: trimmed, platform, channel: channelRef.current, placement, website }),
+        });
+        if (res.status === 422) return "invalid";
+        if (res.status === 429) return "rate";
+        const data = (await res.json().catch(() => null)) as { status?: SignupStatus } | null;
+        if (!res.ok || !data?.status) return "failed";
+        const result: Done = { status: data.status, email: trimmed, platform };
+        setDone(result);
+        safeSet(window.localStorage, DONE_KEY, JSON.stringify(result));
+        track("beta_signup", { platform, status: data.status, channel: channelRef.current, placement });
+        return null;
+      } catch {
+        return "failed";
+      }
+    },
+    [platform],
+  );
+
   const submit = useCallback(async () => {
     if (sending) return;
-    const trimmed = email.trim();
-    if (!EMAIL_RE.test(trimmed)) {
-      setError("invalid");
-      return;
-    }
     setSending(true);
     setError(null);
-    try {
-      const res = await fetch("/api/testers", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: trimmed,
-          platform,
-          channel: channelRef.current,
-          placement: placementRef.current,
-          website: honeypot,
-        }),
-      });
-      if (res.status === 422) return setError("invalid");
-      if (res.status === 429) return setError("rate");
-      const data = (await res.json().catch(() => null)) as { status?: SignupStatus } | null;
-      if (!res.ok || !data?.status) throw new Error(`testers returned ${res.status}`);
-      const result: Done = { status: data.status, email: trimmed, platform };
-      setDone(result);
-      safeSet(window.localStorage, DONE_KEY, JSON.stringify(result));
-      track("beta_signup", {
-        platform,
-        status: data.status,
-        channel: channelRef.current,
-        placement: placementRef.current,
-      });
-    } catch {
-      setError("failed");
-    } finally {
-      setSending(false);
-    }
-  }, [email, platform, honeypot, sending]);
+    const err = await submitEmail(email, placementRef.current, honeypot);
+    setError(err);
+    setSending(false);
+  }, [email, honeypot, sending, submitEmail]);
 
   /** "Use a different email" — back to the form, keeping the platform. */
   const reset = useCallback(() => {
@@ -191,9 +189,10 @@ export function SignupProvider({ children }: { children: React.ReactNode }) {
       error,
       done,
       submit,
+      submitEmail,
       reset,
     }),
-    [isOpen, openSignup, close, platform, email, setEmail, honeypot, sending, error, done, submit, reset],
+    [isOpen, openSignup, close, platform, email, setEmail, honeypot, sending, error, done, submit, submitEmail, reset],
   );
 
   return (

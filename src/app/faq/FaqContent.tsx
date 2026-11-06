@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { FONT_SORA } from "@/lib/brand";
+import { APK } from "@/lib/beta";
 import { ALL_FAQS, FAQ_CAT_LABELS } from "@/lib/siteData";
 
 const teal = "oklch(40% 0.075 175)";
@@ -11,7 +12,9 @@ export default function FaqContent() {
   const [openFaq, setOpenFaq] = useState<string | null>("q1");
   const [cat, setCat] = useState("All");
 
-  const visible = cat === "All" ? ALL_FAQS : ALL_FAQS.filter((f) => f.cat === cat);
+  // The APK question only shows once the APK release is published.
+  const faqs = ALL_FAQS.filter((f) => APK.available || f.id !== "apk");
+  const visible = cat === "All" ? faqs : faqs.filter((f) => f.cat === cat);
 
   return (
     <main style={{ maxWidth: 880, margin: "0 auto", padding: "72px 32px 88px" }}>
