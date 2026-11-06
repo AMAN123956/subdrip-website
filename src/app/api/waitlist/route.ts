@@ -1,55 +1,26 @@
 import { NextResponse } from "next/server";
-import postgres from "postgres";
+import { ensureOnce, getSql, type Sql } from "@/lib/server/db";
 
 export const runtime = "nodejs";
 
 const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 
 /**
- * Waitlist signups go into the project's existing cloud Postgres
- * (same DATABASE_URL the backend uses). Single small pool per server
- * instance; the table is created on first use so this needs no
- * backend migration.
+ * Legacy waitlist endpoint (NEXT_PUBLIC_WAITLIST_ENDPOINT override target).
+ * The site's own forms now post to /api/testers.
  */
-declare global {
-  var __waitlistSql: ReturnType<typeof postgres> | undefined;
-  var __waitlistReady: Promise<void> | undefined;
-}
-
-function getSql() {
-  const url = process.env.DATABASE_URL;
-  if (!url) return null;
-  if (!globalThis.__waitlistSql) {
-    globalThis.__waitlistSql = postgres(url, {
-      max: 3,
-      idle_timeout: 20,
-      connect_timeout: 10,
-      // Supabase's transaction pooler (port 6543) does not support prepared
-      // statements; disabling them keeps both pooler and direct URLs working.
-      prepare: false,
-    });
-  }
-  return globalThis.__waitlistSql;
-}
-
-function ensureTable(sql: ReturnType<typeof postgres>) {
-  if (!globalThis.__waitlistReady) {
-    globalThis.__waitlistReady = sql`
+function ensureTable(sql: Sql) {
+  return ensureOnce(
+    "waitlist_emails",
+    () => sql`
       CREATE TABLE IF NOT EXISTS waitlist_emails (
         id serial PRIMARY KEY,
         email text NOT NULL UNIQUE,
         source text NOT NULL DEFAULT 'website',
         created_at timestamptz NOT NULL DEFAULT now()
       )
-    `.then(() => undefined)
-      // If creation failed (e.g. transient network error), allow a retry
-      // on the next request instead of caching the rejection forever.
-      .catch((err) => {
-        globalThis.__waitlistReady = undefined;
-        throw err;
-      });
-  }
-  return globalThis.__waitlistReady;
+    `,
+  );
 }
 
 export async function POST(request: Request) {

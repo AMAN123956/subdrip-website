@@ -1,6 +1,6 @@
 "use client";
 
-import WaitlistForm from "@/components/WaitlistForm";
+import JoinBetaButton from "@/components/signup/JoinBetaButton";
 import { EYEBROW_STYLE, FONT_SORA } from "@/lib/brand";
 import { useCurrency } from "@/lib/currency";
 import { getHowSteps } from "@/lib/siteData";
@@ -156,7 +156,7 @@ export default function HowItWorksContent() {
       </div>
 
       <div style={{ marginTop: 40, display: "flex", justifyContent: "center" }}>
-        <WaitlistForm align="center" />
+        <JoinBetaButton placement="how-it-works" label="Join the beta. It's free." />
       </div>
     </main>
   );

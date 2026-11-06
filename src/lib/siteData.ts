@@ -10,9 +10,9 @@ const teal = "oklch(40% 0.075 175)";
 /* ---------------- Hero ---------------- */
 
 export const TRUST_FACTS = [
-  { label: "Source access", value: "Read-only" },
-  { label: "Detected items", value: "You review first" },
-  { label: "Bank login", value: "Never asked" },
+  { label: "Gmail access", value: "Read-only access" },
+  { label: "Banking", value: "No bank login" },
+  { label: "Detected items", value: "You review everything" },
 ];
 
 export const getHeroPills = (p: PriceFn) => [
@@ -199,6 +199,9 @@ export const FEATURE_DETAIL = [
 /* ---------------- FAQ ---------------- */
 
 export const ALL_FAQS = [
+  { id: "free", cat: "Product", q: "Is it free?", a: "Yes. The beta is completely free, with no card and no trial clock. If paid extras arrive later, everything you use today keeps working." },
+  { id: "personal", cat: "Privacy", q: "Does it read my personal emails?", a: "It only searches for billing emails such as receipts, invoices and renewal notices, and it never reads the rest of your inbox. Gmail access is read-only, so it can't send, delete or change anything, and you can disconnect it anytime." },
+  { id: "iphone", cat: "Product", q: "When is the iPhone app coming?", a: "Android is in beta now and iPhone is next. Join the iPhone waitlist and we'll email you once, the day it's ready." },
   { id: "q1", cat: "Product", q: "What does SubDrip do?", a: "It brings your recurring subscriptions into one place, shows what they cost monthly and annually, tracks upcoming renewals and trials, and summarises what changed each week." },
   { id: "q2", cat: "Product", q: "Can I use it without connecting Gmail?", a: "Yes. You can add every subscription manually, either from the regional plan catalog or as a free-form entry. A source connection only saves you typing." },
   { id: "q3", cat: "Product", q: "Can I add services that are not in the catalog?", a: "Yes. Manual entry accepts any name, amount, billing cycle, and renewal date, including services with unusual billing periods." },

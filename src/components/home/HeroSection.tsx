@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import HeroPhone, { type HeroPhoneVariant } from "@/components/phone/HeroPhone";
-import WaitlistForm from "@/components/WaitlistForm";
-import { BRAND, EYEBROW_STYLE, FONT_SORA } from "@/lib/brand";
+import Link from "next/link";
+import JoinBetaButton from "@/components/signup/JoinBetaButton";
+import { EYEBROW_STYLE, FONT_SORA } from "@/lib/brand";
 import { useCurrency } from "@/lib/currency";
 import { getHeroPills, HERO_SCREEN_ORDER, TRUST_FACTS } from "@/lib/siteData";
 
@@ -20,7 +21,8 @@ export default function HeroSection() {
 
   const heroScreen = HERO_SCREEN_ORDER[heroStep] as HeroPhoneVariant;
   const heroKey = `hero${heroStep}${currency}`;
-  const pills = getHeroPills(p);
+  // Two pills, not five: the renewal reminder and the monthly total.
+  const pills = getHeroPills(p).slice(0, 2);
 
   return (
     <section
@@ -37,7 +39,7 @@ export default function HeroSection() {
       }}
     >
       <div style={{ animation: "fadeUp 0.5s ease", minWidth: 0, width: "100%", justifySelf: "start" }}>
-        <div style={EYEBROW_STYLE}>{BRAND.availability}</div>
+        <div style={EYEBROW_STYLE}>Android beta · open now</div>
         <h1
           style={{
             fontFamily: FONT_SORA,
@@ -50,7 +52,7 @@ export default function HeroSection() {
             textWrap: "balance",
           }}
         >
-          {BRAND.tagline}
+          Find the subscriptions you forgot you&rsquo;re paying for.
         </h1>
         <p
           style={{
@@ -62,38 +64,18 @@ export default function HeroSection() {
             textWrap: "pretty",
           }}
         >
-          {BRAND.description}
+          SubDrip reads your billing emails (read-only), lists every recurring charge with your monthly total,
+          and reminds you before anything renews. No bank login.
         </p>
 
-        <div data-r="mobonly" style={{ margin: "26px -16px 0", position: "relative", overflow: "hidden" }}>
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              background:
-                "radial-gradient(120% 70% at 50% 100%, oklch(92% 0.05 175 / 0.75), transparent 70%)",
-            }}
-          />
-          <div style={{ position: "relative", display: "flex", justifyContent: "center" }}>
-            <div
-              key={heroKey}
-              style={{
-                zoom: 0.92,
-                width: 300,
-                height: 280,
-                overflow: "hidden",
-                borderRadius: "38px 38px 0 0",
-                filter: "drop-shadow(0 18px 34px oklch(30% 0.02 80 / 0.22))",
-                animation: "softIn 0.35s ease",
-              }}
-            >
-              <HeroPhone variant={heroScreen} />
-            </div>
-          </div>
+        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 12, marginTop: 30 }}>
+          <JoinBetaButton id="hero-cta" placement="hero" label="Join the beta. It's free." className="hero-cta" />
+          <Link href="/demo" className="hero-demo hov-border-teal">
+            Try the live demo
+          </Link>
         </div>
-
-        <div data-r="waitlist">
-          <WaitlistForm />
+        <div style={{ fontSize: 13.5, color: "oklch(55% 0.012 80)", marginTop: 12 }}>
+          Android beta open now · iPhone waitlist · takes 10 seconds
         </div>
 
         <div data-r="mobrow" style={{ flexWrap: "wrap", gap: 8, marginTop: 22 }}>
@@ -132,6 +114,33 @@ export default function HeroSection() {
               </span>
             </div>
           ))}
+        </div>
+
+        <div data-r="mobonly" style={{ margin: "26px -16px 0", position: "relative", overflow: "hidden" }}>
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              background:
+                "radial-gradient(120% 70% at 50% 100%, oklch(92% 0.05 175 / 0.75), transparent 70%)",
+            }}
+          />
+          <div style={{ position: "relative", display: "flex", justifyContent: "center" }}>
+            <div
+              key={heroKey}
+              style={{
+                zoom: 0.92,
+                width: 300,
+                height: 280,
+                overflow: "hidden",
+                borderRadius: "38px 38px 0 0",
+                filter: "drop-shadow(0 18px 34px oklch(30% 0.02 80 / 0.22))",
+                animation: "softIn 0.35s ease",
+              }}
+            >
+              <HeroPhone variant={heroScreen} />
+            </div>
+          </div>
         </div>
 
         <div

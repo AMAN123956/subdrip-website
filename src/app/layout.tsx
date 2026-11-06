@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { CurrencyProvider } from "@/lib/currency";
+import { SignupProvider } from "@/components/signup/SignupProvider";
 import { BRAND } from "@/lib/brand";
 import "./globals.css";
 
@@ -22,6 +23,7 @@ const workSans = Work_Sans({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://getsubdrip.com"),
   title: {
     default: `${BRAND.name} — ${BRAND.tagline}`,
     template: `%s · ${BRAND.name}`,
@@ -32,6 +34,11 @@ export const metadata: Metadata = {
     description: BRAND.description,
     type: "website",
     siteName: BRAND.name,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${BRAND.name} — ${BRAND.tagline}`,
+    description: BRAND.description,
   },
 };
 
@@ -44,6 +51,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${sora.variable} ${workSans.variable}`}>
         <CurrencyProvider>
+          <SignupProvider>
           <div
             style={{
               minHeight: "100vh",
@@ -56,6 +64,7 @@ export default function RootLayout({
             {children}
             <Footer />
           </div>
+          </SignupProvider>
         </CurrencyProvider>
         <Analytics />
       </body>
