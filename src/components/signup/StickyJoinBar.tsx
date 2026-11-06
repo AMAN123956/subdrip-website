@@ -1,19 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import JoinBetaButton from "@/components/signup/JoinBetaButton";
+import JoinBetaButton, { HERO_SIGNUP_ID } from "@/components/signup/JoinBetaButton";
 import { useSignup } from "@/components/signup/SignupProvider";
 
 /**
  * Phone-only bottom bar (CSS hides it above 560px). Appears once the hero
- * button (#hero-cta) scrolls out of view, hides again after signup.
+ * signup form scrolls out of view, hides again after signup.
  */
 export default function StickyJoinBar() {
   const { done, isOpen } = useSignup();
   const [heroVisible, setHeroVisible] = useState(true);
 
   useEffect(() => {
-    const target = document.getElementById("hero-cta");
+    const target = document.getElementById(HERO_SIGNUP_ID);
     if (!target || typeof IntersectionObserver === "undefined") return;
     const io = new IntersectionObserver(([entry]) => setHeroVisible(entry.isIntersecting));
     io.observe(target);

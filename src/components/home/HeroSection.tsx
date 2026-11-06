@@ -1,248 +1,83 @@
-"use client";
+import InlineSignup from "@/components/signup/InlineSignup";
+import { HERO_SIGNUP_ID } from "@/components/signup/JoinBetaButton";
+import BrandLogo from "@/components/home/BrandLogo";
+import { EXAMPLE_MONTHLY, EXAMPLE_YEARLY, inr } from "@/lib/homeData";
 
-import { useEffect, useState } from "react";
-import HeroPhone, { type HeroPhoneVariant } from "@/components/phone/HeroPhone";
-import Link from "next/link";
-import JoinBetaButton from "@/components/signup/JoinBetaButton";
-import { EYEBROW_STYLE, FONT_SORA } from "@/lib/brand";
-import { useCurrency } from "@/lib/currency";
-import { getHeroPills, HERO_SCREEN_ORDER, TRUST_FACTS } from "@/lib/siteData";
+const UP_NEXT = [
+  { slug: "netflix", name: "Netflix", meta: "Standard · Sun", due: "2 days" },
+  { slug: "chatgpt", name: "ChatGPT", meta: "Plus · Mon", amount: 1999 },
+  { slug: "youtube-premium", name: "YouTube Premium", meta: "Individual · 18 Nov", amount: 149 },
+  { slug: "spotify", name: "Spotify", meta: "Premium · 21 Nov", amount: 139 },
+];
 
 export default function HeroSection() {
-  const { p, currency } = useCurrency();
-  const [heroStep, setHeroStep] = useState(0);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setHeroStep((s) => (s + 1) % HERO_SCREEN_ORDER.length);
-    }, 1800);
-    return () => clearInterval(timer);
-  }, []);
-
-  const heroScreen = HERO_SCREEN_ORDER[heroStep] as HeroPhoneVariant;
-  const heroKey = `hero${heroStep}${currency}`;
-  // Two pills, not five: the renewal reminder and the monthly total.
-  const pills = getHeroPills(p).slice(0, 2);
-
   return (
-    <section
-      data-r="hero"
-      style={{
-        maxWidth: 1200,
-        margin: "0 auto",
-        padding: "88px 32px 72px",
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(min(300px, 100%), 1fr))",
-        gap: 56,
-        alignItems: "center",
-        justifyItems: "center",
-      }}
-    >
-      <div style={{ animation: "fadeUp 0.5s ease", minWidth: 0, width: "100%", justifySelf: "start" }}>
-        <div style={EYEBROW_STYLE}>Android beta · open now</div>
-        <h1
-          style={{
-            fontFamily: FONT_SORA,
-            fontSize: "clamp(40px, 4.6vw, 62px)",
-            lineHeight: 1.04,
-            fontWeight: 700,
-            letterSpacing: "-0.03em",
-            margin: "22px 0 0",
-            color: "oklch(20% 0.01 80)",
-            textWrap: "balance",
-          }}
-        >
-          Find the subscriptions you forgot you&rsquo;re paying for.
-        </h1>
-        <p
-          style={{
-            fontSize: 19,
-            lineHeight: 1.6,
-            color: "oklch(48% 0.012 80)",
-            margin: "24px 0 0",
-            maxWidth: 510,
-            textWrap: "pretty",
-          }}
-        >
-          SubDrip reads your billing emails (read-only), lists every recurring charge with your monthly total,
-          and reminds you before anything renews. No bank login.
-        </p>
-
-        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 12, marginTop: 30 }}>
-          <JoinBetaButton id="hero-cta" placement="hero" label="Join the beta. It's free." className="hero-cta" />
-          <Link href="/demo" className="hero-demo hov-border-teal">
-            Try the live demo
-          </Link>
-        </div>
-        <div style={{ fontSize: 13.5, color: "oklch(55% 0.012 80)", marginTop: 12 }}>
-          Android beta open now · iPhone waitlist · takes 10 seconds
+    <section className="hp-hero">
+      <div className="hp-wrap hp-hero-grid">
+        <div>
+          <span className="hp-livepill">
+            <span className="hp-live" aria-hidden>
+              <i />
+            </span>
+            Android beta is open · iPhone waitlist
+          </span>
+          <h1 className="hp-h1">
+            Find the subscriptions you <em>forgot</em> you&rsquo;re paying for.
+          </h1>
+          <p className="hp-lead">
+            SubDrip finds every recurring charge, adds them into one monthly total, and warns you <b>before</b> the
+            money leaves your account. Connect Gmail read-only, or add plans by hand in two taps.
+          </p>
+          <InlineSignup id={HERO_SIGNUP_ID} placement="hero" showApk />
+          <ul className="hp-trust">
+            <li><span className="hp-tick" aria-hidden>✓</span>Read-only Gmail</li>
+            <li><span className="hp-tick" aria-hidden>✓</span>No bank login, ever</li>
+            <li><span className="hp-tick" aria-hidden>✓</span>Delete your data anytime</li>
+          </ul>
         </div>
 
-        <div data-r="mobrow" style={{ flexWrap: "wrap", gap: 8, marginTop: 22 }}>
-          {TRUST_FACTS.map((t) => (
-            <div
-              key={t.label}
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 7,
-                background: "#fff",
-                border: "1px solid oklch(91% 0.014 80)",
-                borderRadius: 100,
-                padding: "7px 13px 7px 9px",
-              }}
-            >
-              <div
-                style={{
-                  width: 15,
-                  height: 15,
-                  borderRadius: "50%",
-                  background: "oklch(40% 0.075 175)",
-                  color: "#fff",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: 8.5,
-                  fontWeight: 700,
-                  flexShrink: 0,
-                }}
-              >
-                ✓
+        <div className="hp-visual" aria-hidden>
+          <div className="hp-drip hp-d1">
+            <BrandLogo slug="netflix" name="Netflix" />
+            <div><b>Netflix renews Sunday</b><span>₹499 · reminder set</span></div>
+          </div>
+          <div className="hp-drip hp-d2">
+            <BrandLogo slug="chatgpt" name="ChatGPT" />
+            <div><b>ChatGPT Plus</b><span>₹1,999 · renews in 3 days</span></div>
+          </div>
+          <div className="hp-drip hp-d3">
+            <span className="hp-logo hp-logo-save">₹</span>
+            <div><b>₹139 could be saved</b><span>Spotify, unused 6 weeks</span></div>
+          </div>
+          <div className="hp-phone">
+            <div className="hp-screen">
+              <div className="hp-notch" />
+              <div className="hp-sc-hi">Good evening</div>
+              <div className="hp-sc-title">Your subscriptions</div>
+              <div className="hp-total">
+                <small>This month</small>
+                <div className="hp-amt">{inr(EXAMPLE_MONTHLY)}</div>
+                <div className="hp-yr">6 active · {inr(EXAMPLE_YEARLY)} a year</div>
+                <div className="hp-bars">
+                  {[52, 58, 55, 70, 66, 100].map((h, i) => (
+                    <i key={i} style={{ height: `${h}%` }} />
+                  ))}
+                </div>
               </div>
-              <span style={{ fontSize: 12.5, fontWeight: 600, color: "oklch(32% 0.012 80)", whiteSpace: "nowrap" }}>
-                {t.value}
-              </span>
-            </div>
-          ))}
-        </div>
-
-        <div data-r="mobonly" style={{ margin: "26px -16px 0", position: "relative", overflow: "hidden" }}>
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              background:
-                "radial-gradient(120% 70% at 50% 100%, oklch(92% 0.05 175 / 0.75), transparent 70%)",
-            }}
-          />
-          <div style={{ position: "relative", display: "flex", justifyContent: "center" }}>
-            <div
-              key={heroKey}
-              style={{
-                zoom: 0.92,
-                width: 300,
-                height: 280,
-                overflow: "hidden",
-                borderRadius: "38px 38px 0 0",
-                filter: "drop-shadow(0 18px 34px oklch(30% 0.02 80 / 0.22))",
-                animation: "softIn 0.35s ease",
-              }}
-            >
-              <HeroPhone variant={heroScreen} />
+              <div className="hp-sc-label">Up next <span>this week</span></div>
+              {UP_NEXT.map((r) => (
+                <div key={r.name} className="hp-row">
+                  <BrandLogo slug={r.slug} name={r.name} />
+                  <div>
+                    <div className="hp-nm">{r.name}</div>
+                    <div className="hp-mt">{r.meta}</div>
+                  </div>
+                  {r.due ? <span className="hp-due">{r.due}</span> : <span className="hp-pr">{inr(r.amount!)}</span>}
+                </div>
+              ))}
             </div>
           </div>
         </div>
-
-        <div
-          data-r="deskonly"
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: 34,
-            marginTop: 44,
-            paddingTop: 26,
-            borderTop: "1px solid oklch(89% 0.01 80)",
-          }}
-        >
-          {TRUST_FACTS.map((t) => (
-            <div key={t.label}>
-              <div style={{ fontSize: 13, color: "oklch(55% 0.012 80)" }}>{t.label}</div>
-              <div style={{ fontFamily: FONT_SORA, fontSize: 15, fontWeight: 600, marginTop: 4, color: "oklch(25% 0.01 80)" }}>
-                {t.value}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div
-        data-r="herophone"
-        style={{ display: "flex", justifyContent: "center", position: "relative", width: "100%", minWidth: 0 }}
-      >
-        <div style={{ position: "absolute", inset: 0, overflow: "hidden", pointerEvents: "none" }}>
-          <div
-            style={{
-              position: "absolute",
-              left: "50%",
-              transform: "translateX(-50%)",
-              width: "100%",
-              maxWidth: 400,
-              aspectRatio: "1",
-              borderRadius: "50%",
-              background: "radial-gradient(circle, oklch(90% 0.05 175 / 0.6), transparent 68%)",
-              top: 60,
-            }}
-          />
-        </div>
-        <div
-          style={{
-            position: "relative",
-            filter: "drop-shadow(0 30px 60px oklch(30% 0.02 80 / 0.2))",
-            animation: "fadeUp 0.6s ease",
-          }}
-        >
-          <div key={heroKey} style={{ animation: "softIn 0.35s ease" }}>
-            <HeroPhone variant={heroScreen} />
-          </div>
-        </div>
-
-        {pills.map((pill) => (
-          <div
-            key={pill.title + pill.delay}
-            data-r="pill"
-            style={{
-              position: "absolute",
-              zIndex: 2,
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              background: "#fff",
-              border: "1px solid oklch(91% 0.014 80)",
-              borderRadius: 100,
-              padding: "9px 15px 9px 10px",
-              boxShadow: "0 10px 26px oklch(30% 0.02 80 / 0.12)",
-              whiteSpace: "nowrap",
-              opacity: 0,
-              top: pill.top,
-              left: pill.left,
-              right: pill.right,
-              animation: "pillFloat 9s ease-in-out infinite",
-              animationDelay: pill.delay,
-            }}
-          >
-            <div
-              style={{
-                width: 24,
-                height: 24,
-                borderRadius: 8,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexShrink: 0,
-                background: pill.tint,
-                color: pill.fg,
-              }}
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round">
-                <path d={pill.iconPath} />
-              </svg>
-            </div>
-            <div>
-              <div style={{ fontSize: 12.5, fontWeight: 600, color: "oklch(24% 0.01 80)", lineHeight: 1.2 }}>{pill.title}</div>
-              <div style={{ fontSize: 11, color: "oklch(52% 0.012 80)", marginTop: 1 }}>{pill.meta}</div>
-            </div>
-          </div>
-        ))}
       </div>
     </section>
   );

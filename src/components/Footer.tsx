@@ -1,5 +1,7 @@
 import Link from "next/link";
 import Logo from "@/components/Logo";
+import InlineSignup from "@/components/signup/InlineSignup";
+import { APK } from "@/lib/beta";
 import { BRAND, FONT_SORA, FOOTER_COLS } from "@/lib/brand";
 
 export default function Footer() {
@@ -10,6 +12,16 @@ export default function Footer() {
         background: "oklch(96% 0.01 80)",
       }}
     >
+      <div className="foot-join">
+        <div className="foot-join-copy">
+          <div className="foot-join-title">Join the beta tester list</div>
+          <p>
+            Free during beta. Android testers get the install link right away; iPhone gets one email the day it ships.
+            Or <a href={APK.arm64.url}>download the APK</a> ({APK.arm64.size}).
+          </p>
+        </div>
+        <InlineSignup placement="footer" variant="footer" />
+      </div>
       <div
         data-r="foot"
         style={{

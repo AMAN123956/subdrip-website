@@ -81,6 +81,7 @@ export const FOOTER_COLS = [
       { label: "How it works", href: "/how-it-works" },
       { label: "Features", href: "/features" },
       { label: "Join the beta", href: "/download" },
+      { label: "Download the APK", href: "/download#apk" },
     ],
   },
   {

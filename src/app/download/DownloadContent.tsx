@@ -4,6 +4,7 @@ import Link from "next/link";
 import Logo from "@/components/Logo";
 import HeroPhone, { type HeroPhoneVariant } from "@/components/phone/HeroPhone";
 import JoinBetaButton from "@/components/signup/JoinBetaButton";
+import ApkSection from "./ApkSection";
 import { BRAND, FONT_SORA, STORE_BUTTONS } from "@/lib/brand";
 
 const teal = "oklch(40% 0.075 175)";
@@ -70,6 +71,8 @@ export default function DownloadContent() {
         ))}
       </div>
       <div style={{ fontSize: 13.5, color: "oklch(55% 0.012 80)", marginTop: 14 }}>{BRAND.platformsNote}</div>
+
+      <ApkSection />
 
       <div style={{ display: "flex", justifyContent: "center", gap: 24, marginTop: 56, flexWrap: "wrap" }}>
         {SHOTS.map((variant) => (

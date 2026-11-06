@@ -15,6 +15,23 @@ export const PLAY_OPT_IN_URL = `https://play.google.com/apps/testing/${ANDROID_P
 export const PLAY_STORE_URL = `https://play.google.com/store/apps/details?id=${ANDROID_PACKAGE}`;
 
 /** Server → client result of a signup; drives the popup's success states. */
+/**
+ * Direct APK download (GitHub Releases on the public website repo). Bump the
+ * tag + version when a new build is published; the page reads only these.
+ */
+export const APK = {
+  version: "1.0.0 (7)",
+  minAndroid: "Android 9+",
+  arm64: {
+    url: "https://github.com/AMAN123956/subdrip-website/releases/download/apk-1.0.0-7/SubDrip-1.0.0-arm64.apk",
+    size: "23 MB",
+  },
+  universal: {
+    url: "https://github.com/AMAN123956/subdrip-website/releases/download/apk-1.0.0-7/SubDrip-1.0.0-universal.apk",
+    size: "63 MB",
+  },
+} as const;
+
 export type SignupStatus = "added" | "already" | "pending" | "waitlist";
 
 export const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
