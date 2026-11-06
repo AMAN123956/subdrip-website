@@ -593,6 +593,8 @@ button {
   border-radius: 13px;
   cursor: pointer;
   text-decoration: none !important;
+  text-align: center;
+  line-height: 1.35;
   box-shadow: 0 6px 20px oklch(40% 0.075 175 / 0.25);
 }
 .su-cta:hover {
@@ -675,6 +677,29 @@ button {
   color: oklch(38% 0.075 175);
   border: 1.5px solid oklch(40% 0.075 175);
   padding: 6.5px 11px;
+}
+/* Post-signup steps stack when their container is narrow (hero/band card on a
+   phone): text gets the full width, the button sits underneath it. */
+.su-result {
+  container-type: inline-size;
+}
+@container (max-width: 440px) {
+  .su-step {
+    display: grid;
+    grid-template-columns: 28px minmax(0, 1fr);
+    column-gap: 12px;
+    row-gap: 10px;
+    align-items: start;
+  }
+  .su-step .su-pill {
+    grid-column: 2;
+    justify-self: stretch;
+    text-align: center;
+    padding-block: 10px;
+  }
+  .su-step .su-pill.ghost {
+    padding-block: 8.5px;
+  }
 }
 .su-fine {
   font-size: 12.5px;
