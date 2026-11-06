@@ -1,9 +1,8 @@
 "use client";
 
 import HeroPhone from "@/components/phone/HeroPhone";
-import WaitlistForm from "@/components/WaitlistForm";
+import JoinBetaButton from "@/components/signup/JoinBetaButton";
 import { FONT_SORA } from "@/lib/brand";
-import { TRUST_FACTS } from "@/lib/siteData";
 
 export default function BetaBand() {
   return (
@@ -45,7 +44,7 @@ export default function BetaBand() {
               color: "oklch(85% 0.06 175)",
             }}
           >
-            Private beta
+            Android beta · open now
           </div>
           <h2
             style={{
@@ -59,7 +58,7 @@ export default function BetaBand() {
               textWrap: "balance",
             }}
           >
-            Get your invite the day it lands.
+            Try it before everyone else.
           </h2>
           <p
             style={{
@@ -70,45 +69,9 @@ export default function BetaBand() {
               maxWidth: 400,
             }}
           >
-            Android and iOS at launch. One email, nothing else.
+            Free during beta. On iPhone? Join the waitlist and we&rsquo;ll email you the day it&rsquo;s ready.
           </p>
-
-          <div style={{ maxWidth: 440 }}>
-            <WaitlistForm tone="dark" />
-          </div>
-
-          <div
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: "10px 20px",
-              marginTop: 24,
-              paddingTop: 20,
-              borderTop: "1px solid oklch(52% 0.06 175)",
-            }}
-          >
-            {TRUST_FACTS.map((t) => (
-              <div key={t.label} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <div
-                  style={{
-                    width: 16,
-                    height: 16,
-                    borderRadius: "50%",
-                    background: "oklch(52% 0.07 175)",
-                    color: "#fff",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: 9,
-                    fontWeight: 700,
-                  }}
-                >
-                  ✓
-                </div>
-                <span style={{ fontSize: 13.5, color: "oklch(92% 0.03 175)" }}>{t.value}</span>
-              </div>
-            ))}
-          </div>
+          <JoinBetaButton placement="band" variant="light" className="band-cta" style={{ marginTop: 26 }} />
         </div>
 
         <div data-r="betaphonewrap" style={{ position: "relative", justifySelf: "center" }}>

@@ -6,11 +6,12 @@ import { EYEBROW_STYLE, FONT_SORA } from "@/lib/brand";
 import { ALL_FAQS } from "@/lib/siteData";
 
 export default function FaqPreviewSection() {
-  const [openFaq, setOpenFaq] = useState<string | null>("q1");
-  const faqs = ALL_FAQS.slice(0, 5);
+  const [openFaq, setOpenFaq] = useState<string | null>("free");
+  // The three a Reddit thread asks first.
+  const faqs = ["free", "personal", "iphone"].map((id) => ALL_FAQS.find((f) => f.id === id)!);
 
   return (
-    <section style={{ maxWidth: 1200, margin: "0 auto", padding: "0 32px 88px" }}>
+    <section style={{ maxWidth: 1200, margin: "0 auto", padding: "0 32px 72px" }}>
       <div
         style={{
           borderTop: "1px solid oklch(89% 0.01 80)",
@@ -22,7 +23,7 @@ export default function FaqPreviewSection() {
         }}
       >
         <div>
-          <div style={EYEBROW_STYLE}>Questions</div>
+          <div style={EYEBROW_STYLE}>Quick answers</div>
           <h2
             style={{
               fontFamily: FONT_SORA,
@@ -34,7 +35,7 @@ export default function FaqPreviewSection() {
               textWrap: "balance",
             }}
           >
-            The things people ask first.
+            What people ask first.
           </h2>
           <p
             style={{
@@ -45,7 +46,7 @@ export default function FaqPreviewSection() {
               maxWidth: 420,
             }}
           >
-            Five quick answers. The full list covers sources, privacy, reminders and support.
+            The full list covers sources, privacy, reminders and support.
           </p>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginTop: 26 }}>
             <Link

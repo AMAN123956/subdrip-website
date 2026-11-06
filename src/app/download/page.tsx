@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import DownloadContent from "./DownloadContent";
 
 export const metadata: Metadata = {
-  title: "Get early access",
+  title: "Join the beta",
   description:
-    "The app is in private beta on iOS and Android. Join the list and we'll send your invite the day it opens.",
+    "The SubDrip Android beta is open on Google Play and free. iPhone users can join the waitlist.",
 };
 
 export default function DownloadPage() {

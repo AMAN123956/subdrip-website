@@ -16,8 +16,8 @@ export const BRAND = {
   copyright: "© 2026 SubDrip",
   supportEmail: "support@subdrip.app",
   privacyEmail: "privacy@subdrip.app",
-  platformsNote: "Store links go live at launch · Android 9+ and iOS 16+",
-  availability: "Coming soon to iOS & Android",
+  platformsNote: "Android 9+ beta on Google Play · iPhone waitlist",
+  availability: "Android beta · open now",
 } as const;
 
 /** Core color tokens (oklch, kept oklch — do not convert). */
@@ -80,7 +80,7 @@ export const FOOTER_COLS = [
     links: [
       { label: "How it works", href: "/how-it-works" },
       { label: "Features", href: "/features" },
-      { label: "Get early access", href: "/download" },
+      { label: "Join the beta", href: "/download" },
     ],
   },
   {
@@ -101,6 +101,6 @@ export const FOOTER_COLS = [
 ] as const;
 
 export const STORE_BUTTONS = [
-  { glyph: "▶", small: "Coming soon on", big: "Google Play" },
-  { glyph: "", small: "Coming soon on", big: "App Store" },
+  { glyph: "▶", small: "Beta open on", big: "Google Play" },
+  { glyph: "", small: "Waitlist for", big: "App Store" },
 ] as const;

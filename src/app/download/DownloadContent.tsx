@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Logo from "@/components/Logo";
 import HeroPhone, { type HeroPhoneVariant } from "@/components/phone/HeroPhone";
-import WaitlistForm from "@/components/WaitlistForm";
+import JoinBetaButton from "@/components/signup/JoinBetaButton";
 import { BRAND, FONT_SORA, STORE_BUTTONS } from "@/lib/brand";
 
 const teal = "oklch(40% 0.075 175)";
@@ -39,11 +39,11 @@ export default function DownloadContent() {
           maxWidth: 520,
         }}
       >
-        The app is in private beta on iOS and Android. Join the list and we&rsquo;ll send your invite the day it opens.
+        The Android beta is open now on Google Play, and it&rsquo;s free. On iPhone? Join the waitlist and we&rsquo;ll email you the day it ships.
       </p>
 
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        <WaitlistForm align="center" />
+      <div style={{ display: "flex", justifyContent: "center", marginTop: 28 }}>
+        <JoinBetaButton placement="download" label="Join the beta. It's free." />
       </div>
 
       <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 12, marginTop: 34 }}>

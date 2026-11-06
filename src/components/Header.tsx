@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import Logo from "@/components/Logo";
+import JoinBetaButton from "@/components/signup/JoinBetaButton";
 import { BRAND, FONT_SORA, NAV_LINKS } from "@/lib/brand";
 
 const teal = "oklch(40% 0.075 175)";
@@ -102,27 +103,7 @@ export default function Header() {
           ))}
         </nav>
 
-        <Link
-          data-r="headercta"
-          href="/download"
-          className="hov-border-teal hov-lift"
-          style={{
-            border: "1.5px solid oklch(85% 0.01 80)",
-            background: "#fff",
-            color: "oklch(28% 0.01 80)",
-            fontSize: 14,
-            fontWeight: 600,
-            padding: "10px 17px",
-            borderRadius: 11,
-            cursor: "pointer",
-            whiteSpace: "nowrap",
-            flexShrink: 0,
-            transition: "border-color 0.2s ease, transform 0.12s ease",
-            textDecoration: "none",
-          }}
-        >
-          Get early access
-        </Link>
+        <JoinBetaButton placement="header" variant="outline" className="headercta-btn" />
 
         <button
           data-r="burger"
@@ -195,27 +176,11 @@ export default function Header() {
             {link.label}
           </Link>
         ))}
-        <Link
-          href="/download"
-          onClick={() => setMenuOpen(false)}
-          style={{
-            display: "block",
-            width: "100%",
-            textAlign: "center",
-            marginTop: 16,
-            border: "none",
-            background: teal,
-            color: "#fff",
-            fontSize: 15.5,
-            fontWeight: 600,
-            padding: "15px 18px",
-            borderRadius: 12,
-            cursor: "pointer",
-            textDecoration: "none",
-          }}
-        >
-          Get early access
-        </Link>
+        <JoinBetaButton
+          placement="mobile-menu"
+          onOpen={() => setMenuOpen(false)}
+          style={{ display: "block", width: "100%", marginTop: 16 }}
+        />
       </div>
     </header>
   );
