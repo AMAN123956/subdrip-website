@@ -927,7 +927,7 @@ button {
 }
 
 /* ============================================================
-   Inline signup (hero, final band, footer) — components/signup/InlineSignup
+   Inline signup (hero, final band) — components/signup/InlineSignup
    ============================================================ */
 .is-card {
   margin-top: 30px;
@@ -1055,95 +1055,12 @@ button {
 .is-apk a {
   font-weight: 600;
 }
-.is-footer {
-  margin-top: 0;
-  box-shadow: none;
-  max-width: 480px;
-  width: 100%;
-  padding: 14px;
-}
-.is-footer .is-hint {
-  display: none;
-}
-.is-footer .is-hint.err {
-  display: block;
-}
-.is-footer-done {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 14.5px;
-  color: oklch(30% 0.06 160);
-  background: oklch(95% 0.04 160);
-  border-radius: 14px;
-  padding: 14px 16px;
-  max-width: 480px;
-}
-.is-tick {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: oklch(40% 0.075 175);
-  color: #fff;
-  display: grid;
-  place-items: center;
-  font-size: 12px;
-  flex: none;
-}
-.is-linkbtn {
-  border: 0;
-  background: none;
-  padding: 0;
-  font: inherit;
-  font-weight: 600;
-  color: oklch(40% 0.075 175);
-  cursor: pointer;
-  text-decoration: underline;
-}
 @media (max-width: 560px) {
   .is-go {
     width: 100%;
   }
   .is-card {
     padding: 14px;
-  }
-}
-
-/* Footer "join the tester list" row */
-.foot-join {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 40px 32px 0;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px 40px;
-}
-.foot-join-copy {
-  flex: 1 1 320px;
-  min-width: 0;
-}
-.foot-join-title {
-  font-family: var(--font-sora), sans-serif;
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: oklch(22% 0.01 80);
-}
-.foot-join-copy p {
-  font-size: 14px;
-  line-height: 1.6;
-  color: oklch(50% 0.012 80);
-  margin: 6px 0 0;
-  max-width: 52ch;
-}
-.foot-join .is-footer {
-  flex: 1 1 360px;
-}
-@media (max-width: 560px) {
-  .foot-join {
-    padding: 32px 16px 0;
   }
 }
 

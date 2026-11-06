@@ -8,7 +8,7 @@ import { useSignup, type SignupError } from "@/components/signup/SignupProvider"
 import { APK } from "@/lib/beta";
 
 /**
- * The email-in-place signup (hero, final band, footer). Shares platform and
+ * The email-in-place signup (hero, final band). Shares platform and
  * the finished state with the popup through SignupProvider, so after one
  * signup every form and button on the site shows "You're in".
  * Styles: .is-* in globals.css.
@@ -17,13 +17,11 @@ export default function InlineSignup({
   placement,
   id,
   tone = "light",
-  variant = "card",
   showApk = false,
 }: {
   placement: string;
   id?: string;
   tone?: "light" | "dark";
-  variant?: "card" | "footer";
   showApk?: boolean;
 }) {
   const s = useSignup();
@@ -41,24 +39,7 @@ export default function InlineSignup({
     setSending(false);
   };
 
-  const footer = variant === "footer";
-
   if (s.done) {
-    if (footer) {
-      return (
-        <div className="is-footer-done">
-          <span className="is-tick" aria-hidden>✓</span>
-          <span>
-            You&rsquo;re on the {s.done.status === "waitlist" ? "iPhone waitlist" : "beta"}.{" "}
-            {s.done.status !== "waitlist" && (
-              <button type="button" className="is-linkbtn" onClick={() => s.openSignup("footer")}>
-                See install steps
-              </button>
-            )}
-          </span>
-        </div>
-      );
-    }
     return (
       <div id={id} className={`is-card is-${tone} is-done`}>
         <SignupResult done={s.done} onReset={s.reset} headingId={`${inputId}-title`} />
@@ -81,7 +62,7 @@ export default function InlineSignup({
     <form
       id={id}
       noValidate
-      className={`is-card is-${tone}${footer ? " is-footer" : ""}`}
+      className={`is-card is-${tone}`}
       onSubmit={(e) => {
         e.preventDefault();
         submit();
@@ -105,7 +86,7 @@ export default function InlineSignup({
             </button>
           ))}
         </div>
-        {!footer && <span className="is-free">Free during beta</span>}
+        <span className="is-free">Free during beta</span>
       </div>
       <div className="is-row">
         <label htmlFor={inputId} className="sr-only">Email address</label>
