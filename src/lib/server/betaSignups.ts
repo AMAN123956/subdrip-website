@@ -2,8 +2,9 @@ import { ensureOnce, type Sql } from "@/lib/server/db";
 
 /**
  * beta_signups — one row per (email, platform). Created on first use like
- * waitlist_emails, so it needs no backend migration. group_status tracks the
- * Google Group sync ('added' | 'already' | 'pending' | 'n/a' for iPhone);
+ * waitlist_emails; the backend also ensures it (plus reminder/unsubscribe
+ * columns and beta_events) in backend/src/db/ensureBetaTables.js. group_status is
+ * 'self-join' for Android since testers join the group themselves ('n/a' for iPhone);
  * email_sent_at stays null until the backend confirms the send.
  */
 export function ensureBetaTable(sql: Sql) {

@@ -8,6 +8,13 @@ export type Platform = "android" | "ios";
 
 export const ANDROID_PACKAGE = "com.subdrip.app";
 
+/**
+ * Play closed testing reads this PERSONAL Google Group (Play can't validate a Workspace-domain
+ * group from a personal developer account). Google has no API to add members to a personal
+ * group, so testers join it themselves — "Anyone on the web can join" — as step 1.
+ */
+export const TESTER_GROUP_URL = "https://groups.google.com/g/subdrip-testers";
+
 /** Play's tester opt-in page — works once the email is in the tester group. */
 export const PLAY_OPT_IN_URL = `https://play.google.com/apps/testing/${ANDROID_PACKAGE}`;
 
@@ -35,7 +42,11 @@ export const APK = {
   },
 } as const;
 
+/** "pending" only survives in old localStorage entries from before self-join; it renders as "added". */
 export type SignupStatus = "added" | "already" | "pending" | "waitlist";
+
+/** Funnel taps recorded from the success screen (mirrors the backend's beta_events.event). */
+export type BetaStep = "join" | "opt_in" | "install" | "demo";
 
 export const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 

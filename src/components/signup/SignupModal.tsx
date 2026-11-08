@@ -14,7 +14,7 @@ import type { Platform } from "@/lib/beta";
 const COPY: Record<Platform, { title: string; body: string; placeholder: string; hint: string; cta: string }> = {
   android: {
     title: "Join the Android beta",
-    body: "Free during beta. We'll add you as a tester on Google Play and email you the install link.",
+    body: "Free during beta. Three taps to install, and we'll email you the steps too.",
     placeholder: "you@gmail.com",
     hint: "Use the Gmail you sign in to the Play Store with.",
     cta: "Get my invite",

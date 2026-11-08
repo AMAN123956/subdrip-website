@@ -56,7 +56,7 @@ export default function InlineSignup({
           ? "That didn't go through. Please try again."
           : ios
             ? "One email the day the iPhone app ships. Nothing else."
-            : "Use the Gmail you sign in to the Play Store with. We add you as a tester and email the install link.";
+            : "Use the Gmail you sign in to the Play Store with. You'll get the install steps right here and by email.";
 
   return (
     <form
