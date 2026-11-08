@@ -4,7 +4,6 @@ import { EMAIL_RE, type Platform, type SignupStatus } from "@/lib/beta";
 import { sendBetaEmail } from "@/lib/server/betaEmail";
 import { ensureBetaTable } from "@/lib/server/betaSignups";
 import { getSql } from "@/lib/server/db";
-import { addToTesterGroup } from "@/lib/server/googleGroups";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -19,10 +18,9 @@ const clean = (v: unknown, max: number, fallback: string) =>
     : fallback;
 
 /**
- * Beta signup: save first (never lose a signup), then for Android add the
- * email to the Play tester Google Group, then (after the response) ask the
- * backend to send the welcome / waitlist email. Google or email failures
- * degrade to status "pending" + the retry cron, never an error.
+ * Beta signup: save the email (+ acquisition channel), then — after the response — ask the
+ * backend to send the welcome / waitlist email. Android testers join the Play tester group
+ * themselves (lib/beta.ts TESTER_GROUP_URL), so there's no Google call on this path.
  */
 export async function POST(request: Request) {
   let body: Record<string, unknown>;
@@ -61,51 +59,36 @@ export async function POST(request: Request) {
 
     // One round trip: rate check + upsert. A repeat signup isn't a new row,
     // so it neither counts toward nor is blocked by the limit.
-    const [row] = await sql<
-      { inserted: boolean; group_status: string; email_sent_at: Date | null; limited: boolean }[]
-    >`
+    const [row] = await sql<{ id: number | null; inserted: boolean; email_sent_at: Date | null; limited: boolean }[]>`
       WITH recent AS (
         SELECT count(*)::int AS n FROM beta_signups
         WHERE ip_hash = ${ipHash} AND created_at > now() - make_interval(mins => ${RATE_WINDOW_MINUTES})
       ),
       existing AS (
-        SELECT group_status, email_sent_at FROM beta_signups WHERE email = ${email} AND platform = ${platform}
+        SELECT id, email_sent_at FROM beta_signups WHERE email = ${email} AND platform = ${platform}
       ),
       ins AS (
         INSERT INTO beta_signups (email, platform, channel, placement, ip_hash, group_status)
-        SELECT ${email}, ${platform}, ${channel}, ${placement}, ${ipHash}, ${platform === "ios" ? "n/a" : "pending"}
+        SELECT ${email}, ${platform}, ${channel}, ${placement}, ${ipHash}, ${platform === "ios" ? "n/a" : "self-join"}
         WHERE NOT EXISTS (SELECT 1 FROM existing) AND (SELECT n FROM recent) < ${RATE_LIMIT}
         ON CONFLICT (email, platform) DO NOTHING
-        RETURNING group_status, email_sent_at
+        RETURNING id, email_sent_at
       )
       SELECT
+        COALESCE((SELECT id FROM ins), (SELECT id FROM existing)) AS id,
         EXISTS (SELECT 1 FROM ins) AS inserted,
-        COALESCE((SELECT group_status FROM ins), (SELECT group_status FROM existing), 'pending') AS group_status,
         COALESCE((SELECT email_sent_at FROM ins), (SELECT email_sent_at FROM existing)) AS email_sent_at,
         (NOT EXISTS (SELECT 1 FROM existing) AND NOT EXISTS (SELECT 1 FROM ins)) AS limited
     `;
 
-    if (row.limited) {
+    if (row.limited || row.id == null) {
       return NextResponse.json({ ok: false, error: "Too many signups from this network." }, { status: 429 });
     }
 
-    let status: SignupStatus;
-    if (platform === "ios") {
-      status = "waitlist";
-    } else if (row.group_status === "added" || row.group_status === "already") {
-      status = "already";
-    } else {
-      const { result, error } = await addToTesterGroup(email);
-      if (error) console.error(`tester group add pending (${channel}):`, error);
-      await sql`
-        UPDATE beta_signups SET group_status = ${result}, group_error = ${error ?? null}, updated_at = now()
-        WHERE email = ${email} AND platform = ${platform}
-      `;
-      status = result;
-    }
-
+    const status: SignupStatus = platform === "ios" ? "waitlist" : row.inserted ? "added" : "already";
     if (!row.email_sent_at) {
-      after(() => sendOnce(email, platform));
+      const signupId = row.id;
+      after(() => sendOnce(signupId, email, platform));
     }
 
     return NextResponse.json({ ok: true, status });
@@ -119,16 +102,16 @@ export async function POST(request: Request) {
  * Claim-then-send so a double submit can't send two emails: the UPDATE only
  * wins once, and a failed send releases the claim for the retry cron.
  */
-async function sendOnce(email: string, platform: Platform) {
+async function sendOnce(signupId: number, email: string, platform: Platform) {
   const sql = getSql();
   if (!sql) return;
   const claimed = await sql`
     UPDATE beta_signups SET email_sent_at = now(), updated_at = now()
-    WHERE email = ${email} AND platform = ${platform} AND email_sent_at IS NULL
+    WHERE id = ${signupId} AND email_sent_at IS NULL
     RETURNING id
   `;
   if (!claimed.length) return;
-  if (!(await sendBetaEmail(email, platform))) {
-    await sql`UPDATE beta_signups SET email_sent_at = NULL WHERE id = ${claimed[0].id}`;
+  if (!(await sendBetaEmail(email, platform, signupId))) {
+    await sql`UPDATE beta_signups SET email_sent_at = NULL WHERE id = ${signupId}`;
   }
 }

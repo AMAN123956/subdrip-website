@@ -5,10 +5,11 @@ import type { Platform } from "@/lib/beta";
  * the backend through its shared branded shell + Brevo — this just asks it to.
  *   BACKEND_API_URL    e.g. https://api.getsubdrip.com
  *   BETA_EMAIL_SECRET  shared secret, same value as the backend's env
+ * signupId lets the backend make every link a tracked redirect (CMS funnel) + add unsubscribe.
  * Returns true only when the backend reports a real send ({ data: { sent: true } });
  * anything else is false and the retry cron resends it.
  */
-export async function sendBetaEmail(email: string, platform: Platform): Promise<boolean> {
+export async function sendBetaEmail(email: string, platform: Platform, signupId?: number): Promise<boolean> {
   const base = process.env.BACKEND_API_URL;
   const secret = process.env.BETA_EMAIL_SECRET;
   if (!base || !secret) {
@@ -19,7 +20,7 @@ export async function sendBetaEmail(email: string, platform: Platform): Promise<
     const res = await fetch(`${base.replace(/\/$/, "")}/api/v1/internal/beta-email`, {
       method: "POST",
       headers: { "Content-Type": "application/json", "x-internal-key": secret },
-      body: JSON.stringify({ email, platform }),
+      body: JSON.stringify({ email, platform, ...(signupId ? { signupId } : {}) }),
       signal: AbortSignal.timeout(10000),
     });
     if (!res.ok) {
